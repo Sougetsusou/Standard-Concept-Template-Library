@@ -76,8 +76,14 @@ def render_conceptualization_to_mesh(data):
 
 
 if __name__ == "__main__":
+    # 获取脚本所在目录
+    script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    with open("conceptualization.pkl", "rb") as f:
+    # 构造同级目录下文件的路径
+    file_path = os.path.join(script_dir, "conceptualization.pkl")
+
+
+    with open(file_path, "rb") as f:
         data_list = pickle.load(f)
 
     for data in data_list:
