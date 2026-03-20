@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -249,7 +251,7 @@ class Symmetrical_Window(ConceptTemplate):
         
         # meshes definition
         for configuration in window_configurations:
-            self.frame_mesh = Rectangular_Ring(
+            tmp_frame_mesh = Rectangular_Ring(
                 configuration["window_size"]["frame_size"][2],
                 configuration["window_size"]["frame_size"][0],
                 configuration["window_size"]["frame_size"][1],
@@ -262,24 +264,26 @@ class Symmetrical_Window(ConceptTemplate):
                 position=configuration["position"],
                 rotation=[np.pi / 2, 0, 0],
             )
-            vertices_list.append(self.frame_mesh.vertices)
-            faces_list.append(self.frame_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.frame_mesh.vertices)
+            vertices_list.append(tmp_frame_mesh.vertices)
+            faces_list.append(tmp_frame_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_frame_mesh.vertices)
 
             glass_mesh_position = []
             for i in range(3):
                 glass_mesh_position.append(configuration["position"][i] + configuration["window_size"]["glass_offset"][i])
 
-            self.glass_mesh = Cuboid(
+            tmp_glass_mesh = Cuboid(
                 configuration["window_size"]["glass_size"][1],
                 configuration["window_size"]["glass_size"][0],
                 configuration["window_size"]["glass_size"][2],
                 position=glass_mesh_position,
             )
-            vertices_list.append(self.glass_mesh.vertices)
-            faces_list.append(self.glass_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.glass_mesh.vertices)
+            vertices_list.append(tmp_glass_mesh.vertices)
+            faces_list.append(tmp_glass_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_glass_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -361,7 +365,7 @@ class Asymmetrical_Window(ConceptTemplate):
             ]
         # set window configurations
         window_configurations = []
-        for i in range(number_of_window[0]):
+        for i in range(int(number_of_window[0])):
             window_configurations.append(
                 {
                     "window_size": window_size[i],
@@ -376,7 +380,7 @@ class Asymmetrical_Window(ConceptTemplate):
 
         # meshes definition
         for configuration in window_configurations:
-            self.frame_mesh = Rectangular_Ring(
+            tmp_frame_mesh = Rectangular_Ring(
                 configuration["window_size"]["frame_size"][2],
                 configuration["window_size"]["frame_size"][0],
                 configuration["window_size"]["frame_size"][1],
@@ -389,24 +393,26 @@ class Asymmetrical_Window(ConceptTemplate):
                 position=configuration["position"],
                 rotation=[np.pi / 2, 0, 0],
             )
-            vertices_list.append(self.frame_mesh.vertices)
-            faces_list.append(self.frame_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.frame_mesh.vertices)
+            vertices_list.append(tmp_frame_mesh.vertices)
+            faces_list.append(tmp_frame_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_frame_mesh.vertices)
 
             glass_mesh_position = []
             for i in range(3):
                 glass_mesh_position.append(configuration["position"][i] + configuration["window_size"]["glass_offset"][i])
 
-            self.glass_mesh = Cuboid(
+            tmp_glass_mesh = Cuboid(
                 configuration["window_size"]["glass_size"][1],
                 configuration["window_size"]["glass_size"][0],
                 configuration["window_size"]["glass_size"][2],
                 position=glass_mesh_position,
             )
-            vertices_list.append(self.glass_mesh.vertices)
-            faces_list.append(self.glass_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.glass_mesh.vertices)
+            vertices_list.append(tmp_glass_mesh.vertices)
+            faces_list.append(tmp_glass_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_glass_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -472,7 +478,7 @@ class VerticalSlid_Window(ConceptTemplate):
 
         # set window configurations
         window_configurations = []
-        for i in range(number_of_window[0]):
+        for i in range(int(number_of_window[0])):
             window_configurations.append(
                 {
                     "window_size": window_size[i],
@@ -487,7 +493,7 @@ class VerticalSlid_Window(ConceptTemplate):
 
         # meshes definition
         for configuration in window_configurations:
-            self.frame_mesh = Rectangular_Ring(
+            tmp_frame_mesh = Rectangular_Ring(
                 configuration["window_size"]["frame_size"][2],
                 configuration["window_size"]["frame_size"][0],
                 configuration["window_size"]["frame_size"][1],
@@ -500,24 +506,26 @@ class VerticalSlid_Window(ConceptTemplate):
                 position=configuration["position"],
                 rotation=[np.pi / 2, 0, 0],
             )
-            vertices_list.append(self.frame_mesh.vertices)
-            faces_list.append(self.frame_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.frame_mesh.vertices)
+            vertices_list.append(tmp_frame_mesh.vertices)
+            faces_list.append(tmp_frame_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_frame_mesh.vertices)
 
             glass_mesh_position = []
             for i in range(3):
                 glass_mesh_position.append(configuration["position"][i] + configuration["window_size"]["glass_offset"][i])
 
-            self.glass_mesh = Cuboid(
+            tmp_glass_mesh = Cuboid(
                 configuration["window_size"]["glass_size"][1],
                 configuration["window_size"]["glass_size"][0],
                 configuration["window_size"]["glass_size"][2],
                 position=glass_mesh_position,
             )
-            vertices_list.append(self.glass_mesh.vertices)
-            faces_list.append(self.glass_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.glass_mesh.vertices)
+            vertices_list.append(tmp_glass_mesh.vertices)
+            faces_list.append(tmp_glass_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_glass_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -550,7 +558,7 @@ class Cuboidal_Handle(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(num_of_handle[0]):
+        for i in range(int(num_of_handle[0])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -571,13 +579,13 @@ class Cuboidal_Handle(ConceptTemplate):
                     position_z += windows_size["size_3"][1]
 
             handle_mesh_position = [offset_x[i], 0, position_z + size[2] / 2]
-            self.handle_mesh = Cuboid(size[1], size[0], size[2],
+            tmp_handle_mesh = Cuboid(size[1], size[0], size[2],
                                  position=handle_mesh_position)
-            vertices_list.append(self.handle_mesh.vertices)
-            faces_list.append(self.handle_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.handle_mesh.vertices)
+            vertices_list.append(tmp_handle_mesh.vertices)
+            faces_list.append(tmp_handle_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_handle_mesh.vertices)
 
-        for i in range(num_of_handle[1]):
+        for i in range(int(num_of_handle[1])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -600,12 +608,14 @@ class Cuboidal_Handle(ConceptTemplate):
                     position_z += windows_size["size_2"][1]
 
             handle_mesh_position = [offset_x[i + 2], 0, position_z - size[2] / 2]
-            self.handle_mesh = Cuboid(size[1], size[0], size[2],
+            tmp_handle_mesh = Cuboid(size[1], size[0], size[2],
                                  position=handle_mesh_position)
-            vertices_list.append(self.handle_mesh.vertices)
-            faces_list.append(self.handle_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.handle_mesh.vertices)
+            vertices_list.append(tmp_handle_mesh.vertices)
+            faces_list.append(tmp_handle_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_handle_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -644,7 +654,7 @@ class Arched_Handle(ConceptTemplate):
         central_angle = (np.arcsin((seperation[0] / 2 + bottom_size[1]) / outer_size[0]) * 2)
         arch_offset_z = bottom_size[2] - np.cos(central_angle / 2) * outer_size[0]
 
-        for i in range(num_of_handle[0]):
+        for i in range(int(num_of_handle[0])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -669,22 +679,22 @@ class Arched_Handle(ConceptTemplate):
                 seperation[0] / 2 + bottom_size[1] / 2,
                 position_z + bottom_size[2] / 2,
             ]   
-            self.top_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
+            tmp_top_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
                                    position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
             bottom_mesh_position = [
                 offset_x[i],
                 -seperation[0] / 2 - bottom_size[1] / 2,
                 position_z + bottom_size[2] / 2,
             ]
-            self.bottom_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
+            tmp_bottom_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
                                       position=bottom_mesh_position)
-            vertices_list.append(self.bottom_mesh.vertices)
-            faces_list.append(self.bottom_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.bottom_mesh.vertices)
+            vertices_list.append(tmp_bottom_mesh.vertices)
+            faces_list.append(tmp_bottom_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_bottom_mesh.vertices)
 
             main_mesh_position = [
                 offset_x[i],
@@ -692,16 +702,16 @@ class Arched_Handle(ConceptTemplate):
                 position_z + +arch_offset_z,
             ]
             main_mesh_rotation = [0, -np.pi / 2 + central_angle / 2, np.pi / 2]
-            self.main_mesh = Ring(bottom_size[0], outer_size[0],
+            tmp_main_mesh = Ring(bottom_size[0], outer_size[0],
                                   seperation[0] / 2 / np.sin(central_angle / 2) + thinner_handle[0],
                                   exist_angle=central_angle,
                                   position=main_mesh_position,
                                   rotation=main_mesh_rotation)
-            vertices_list.append(self.main_mesh.vertices)
-            faces_list.append(self.main_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.main_mesh.vertices)
+            vertices_list.append(tmp_main_mesh.vertices)
+            faces_list.append(tmp_main_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_main_mesh.vertices)
 
-        for i in range(num_of_handle[1]):
+        for i in range(int(num_of_handle[1])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -728,22 +738,22 @@ class Arched_Handle(ConceptTemplate):
                 seperation[0] / 2 + bottom_size[1] / 2,
                 position_z - bottom_size[2] / 2,
             ]   
-            self.top_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
+            tmp_top_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
                               position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
             bottom_mesh_position = [
                 offset_x[i+2],
                 -seperation[0] / 2 - bottom_size[1] / 2,
                 position_z - bottom_size[2] / 2,
             ]
-            self.bottom_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
+            tmp_bottom_mesh = Cuboid(bottom_size[1], bottom_size[0], bottom_size[2],
                                  position=bottom_mesh_position)
-            vertices_list.append(self.bottom_mesh.vertices)
-            faces_list.append(self.bottom_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.bottom_mesh.vertices)
+            vertices_list.append(tmp_bottom_mesh.vertices)
+            faces_list.append(tmp_bottom_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_bottom_mesh.vertices)
 
             main_mesh_position = [
                 offset_x[i+2],
@@ -751,15 +761,17 @@ class Arched_Handle(ConceptTemplate):
                 position_z - arch_offset_z,
             ]
             main_mesh_rotation = [0, np.pi / 2 + central_angle / 2, np.pi / 2]
-            self.main_mesh = Ring(bottom_size[0], outer_size[0],
+            tmp_main_mesh = Ring(bottom_size[0], outer_size[0],
                                   seperation[0] / 2 / np.sin(central_angle / 2) + thinner_handle[0],
                                   exist_angle=central_angle,
                                   position=main_mesh_position,
                                   rotation=main_mesh_rotation)
-            vertices_list.append(self.main_mesh.vertices)
-            faces_list.append(self.main_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.main_mesh.vertices)
+            vertices_list.append(tmp_main_mesh.vertices)
+            faces_list.append(tmp_main_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_main_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -796,7 +808,7 @@ class LShaped_Handle(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(num_of_handle[0]):
+        for i in range(int(num_of_handle[0])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -821,35 +833,35 @@ class LShaped_Handle(ConceptTemplate):
                 0,
                 position_z + size_bottom[2] / 2,
             ]
-            self.bottom_mesh = Cuboid(size_bottom[1], size_bottom[0], size_bottom[2],
+            tmp_bottom_mesh = Cuboid(size_bottom[1], size_bottom[0], size_bottom[2],
                                       position=bottom_mesh_position)
-            vertices_list.append(self.bottom_mesh.vertices)
-            faces_list.append(self.bottom_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.bottom_mesh.vertices)
+            vertices_list.append(tmp_bottom_mesh.vertices)
+            faces_list.append(tmp_bottom_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_bottom_mesh.vertices)
 
             middle_mesh_position = [
                 offset_x[i],
                 offset_middle_y[0],
                 position_z + size_bottom[2] + size_middle[2] / 2,
             ]
-            self.middle_mesh = Cuboid(size_middle[1], size_middle[0], size_middle[2],
+            tmp_middle_mesh = Cuboid(size_middle[1], size_middle[0], size_middle[2],
                                       position=middle_mesh_position)
-            vertices_list.append(self.middle_mesh.vertices)
-            faces_list.append(self.middle_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.middle_mesh.vertices)
+            vertices_list.append(tmp_middle_mesh.vertices)
+            faces_list.append(tmp_middle_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_middle_mesh.vertices)
 
             top_mesh_position = [
                 offset_x[i],
                 offset_middle_y[0] + offset_top_y[0],
                 position_z + size_bottom[2] + size_middle[2] + size_top[2] / 2,
             ]
-            self.top_mesh = Cuboid(size_top[1], size_top[0], size_top[2],
+            tmp_top_mesh = Cuboid(size_top[1], size_top[0], size_top[2],
                                    position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
-        for i in range(num_of_handle[1]):
+        for i in range(int(num_of_handle[1])):
             position_z = 0
             z_layer_position = handle_z_position[i]
             if window_type == 0:
@@ -876,34 +888,36 @@ class LShaped_Handle(ConceptTemplate):
                 0,
                 position_z - size_bottom[2] / 2,
             ]  
-            self.bottom_mesh = Cuboid(size_bottom[1], size_bottom[0], size_bottom[2],
+            tmp_bottom_mesh = Cuboid(size_bottom[1], size_bottom[0], size_bottom[2],
                                       position=bottom_mesh_position)
-            vertices_list.append(self.bottom_mesh.vertices)
-            faces_list.append(self.bottom_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.bottom_mesh.vertices)
+            vertices_list.append(tmp_bottom_mesh.vertices)
+            faces_list.append(tmp_bottom_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_bottom_mesh.vertices)
 
             middle_mesh_position = [
                 offset_x[i+2],
                 offset_middle_y[0],
                 position_z - size_bottom[2] - size_middle[2] / 2,
             ]
-            self.middle_mesh = Cuboid(size_middle[1], size_middle[0], size_middle[2],
+            tmp_middle_mesh = Cuboid(size_middle[1], size_middle[0], size_middle[2],
                                       position=middle_mesh_position)
-            vertices_list.append(self.middle_mesh.vertices)
-            faces_list.append(self.middle_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.middle_mesh.vertices)
+            vertices_list.append(tmp_middle_mesh.vertices)
+            faces_list.append(tmp_middle_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_middle_mesh.vertices)
 
             top_mesh_position = [
                 offset_x[i+2],
                 offset_middle_y[0] + offset_top_y[0],
                 position_z - size_bottom[2] - size_middle[2] - size_top[2] / 2,
             ]
-            self.top_mesh = Cuboid(size_top[1], size_top[0], size_top[2],
+            tmp_top_mesh = Cuboid(size_top[1], size_top[0], size_top[2],
                                    position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
         

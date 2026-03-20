@@ -1,9 +1,12 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, adjust_position_from_rotation, list_add
 from knowledge_utils import *
 import trimesh
+from concept_templates_shared import Sunken_Door
 
 class Cuboidal_Body(ConceptTemplate):
     def __init__(self, size, thickness, position = [0, 0, 0], rotation = [0, 0, 0]):
@@ -142,17 +145,28 @@ class Mutiple_Layer_Body(ConceptTemplate):
         faces_list.append(self.board_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.board_mesh.vertices)
 
-        for i in range(num_of_sub_clapboards[0]):
+        sub_clapboard_sizes   = [sub_clapboard_1_size,   sub_clapboard_2_size,   sub_clapboard_3_size,
+                                  sub_clapboard_4_size,   sub_clapboard_5_size,   sub_clapboard_6_size,
+                                  sub_clapboard_7_size,   sub_clapboard_8_size,   sub_clapboard_9_size,
+                                  sub_clapboard_10_size]
+        sub_clapboard_offsets = [sub_clapboard_1_offset, sub_clapboard_2_offset, sub_clapboard_3_offset,
+                                  sub_clapboard_4_offset, sub_clapboard_5_offset, sub_clapboard_6_offset,
+                                  sub_clapboard_7_offset, sub_clapboard_8_offset, sub_clapboard_9_offset,
+                                  sub_clapboard_10_offset]
+
+        for i in range(int(num_of_sub_clapboards[0])):
+            sc_size   = sub_clapboard_sizes[i]
+            sc_offset = sub_clapboard_offsets[i]
             board_mesh_position = [
-                (thickness[3] - thickness[2]) / 2 + locals()['sub_clapboard_%d_offset'%(i+1)][0],
-                (thickness[1] - thickness[0]) / 2 + locals()['sub_clapboard_%d_offset'%(i+1)][1],
-                thickness[4] / 2 - (size[2] - thickness[4] - locals()['sub_clapboard_%d_size'%(i+1)][2]) / 2
+                (thickness[3] - thickness[2]) / 2 + sc_offset[0],
+                (thickness[1] - thickness[0]) / 2 + sc_offset[1],
+                thickness[4] / 2 - (size[2] - thickness[4] - sc_size[2]) / 2
             ]
-            self.board_mesh = Cuboid(locals()['sub_clapboard_%d_size'%(i+1)][1], locals()['sub_clapboard_%d_size'%(i+1)][0], locals()['sub_clapboard_%d_size'%(i+1)][2],
+            tmp_board_mesh = Cuboid(sc_size[1], sc_size[0], sc_size[2],
                                      position = board_mesh_position)
-            vertices_list.append(self.board_mesh.vertices)
-            faces_list.append(self.board_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.board_mesh.vertices)
+            vertices_list.append(tmp_board_mesh.vertices)
+            faces_list.append(tmp_board_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_board_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -293,61 +307,6 @@ class Front_Double_Layer_Door(ConceptTemplate):
         vertices_list.append(self.front_mesh.vertices)
         faces_list.append(self.front_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.front_mesh.vertices)
-
-        self.vertices = np.concatenate(vertices_list)
-        self.faces = np.concatenate(faces_list)
-
-        # Global Transformation
-        self.vertices = apply_transformation(self.vertices, position, rotation)
-
-        self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
-        self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))
-
-        self.semantic = 'Door'
-
-
-class Sunken_Door(ConceptTemplate):
-    def __init__(self, size, sunken_size, sunken_offset, position = [0, 0, 0], rotation = [0, 0, 0]):
-
-        # Process rotation param
-        rotation = [x / 180 * np.pi for x in rotation]
-        super().__init__(position, rotation)
-
-        # Record Parameters
-        self.size = size
-        self.sunken_size = sunken_size
-        self.sunken_offset = sunken_offset
-
-        # Instantiate component geometries
-        vertices_list = []
-        faces_list = []
-        total_num_vertices = 0
-
-        bottom_mesh_position = [
-            0,
-            0,
-            -sunken_size[2] / 2 + size[2] / 2
-        ]
-        self.bottom_mesh = Cuboid(size[1], size[0], size[2] - sunken_size[2], 
-                                  position = bottom_mesh_position)
-        vertices_list.append(self.bottom_mesh.vertices)
-        faces_list.append(self.bottom_mesh.faces + total_num_vertices)
-        total_num_vertices += len(self.bottom_mesh.vertices)
-
-        top_mesh_position = [
-            0,
-            0,
-            (size[2] - sunken_size[2]) / 2 + size[2] / 2
-        ]
-        top_mesh_rotation = [np.pi / 2, 0, 0]
-        self.top_mesh = Rectangular_Ring(sunken_size[2], size[0], size[1], 
-                                         sunken_size[0], sunken_size[1],
-                                         [sunken_offset[0], -sunken_offset[1]],
-                                         position = top_mesh_position,
-                                         rotation = top_mesh_rotation)
-        vertices_list.append(self.top_mesh.vertices)
-        faces_list.append(self.top_mesh.faces + total_num_vertices)
-        total_num_vertices += len(self.top_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -533,7 +492,7 @@ class Claw_Handle(ConceptTemplate):
         faces_list.append(self.bottom_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.bottom_mesh.vertices)
 
-        for i in range(num_forks[0]):
+        for i in range(int(num_forks[0])):
             rotation_tmp = np.pi * 2 / num_forks[0] * i
             rotate_length = bottom_size[0] + fork_size[0] / 2 * np.cos(fork_tilt_rotation[0])
             
@@ -547,12 +506,12 @@ class Claw_Handle(ConceptTemplate):
                 -fork_tilt_rotation[0], 
                 rotation_tmp
             ]
-            self.mesh = Cuboid(fork_size[1], fork_size[0], fork_size[2],
+            tmp_mesh = Cuboid(fork_size[1], fork_size[0], fork_size[2],
                                position = mesh_position,
                                rotation = mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -600,7 +559,7 @@ class Round_Handle(ConceptTemplate):
         faces_list.append(self.bottom_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.bottom_mesh.vertices)
 
-        for i in range(num_forks[0]):
+        for i in range(int(num_forks[0])):
             rotation_tmp = np.pi * 2 / num_forks[0] * i
             rotate_length = bottom_size[0] + fork_size[0] / 2 * np.cos(fork_tilt_rotation[0])
             
@@ -614,12 +573,12 @@ class Round_Handle(ConceptTemplate):
                 -fork_tilt_rotation[0], 
                 rotation_tmp
             ]
-            self.mesh = Cuboid(fork_size[1], fork_size[0], fork_size[2],
+            tmp_mesh = Cuboid(fork_size[1], fork_size[0], fork_size[2],
                                position = mesh_position,
                                rotation = mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         outer_radius = circle_size[0]
         inner_radius = bottom_size[0] + fork_size[0] * np.cos(fork_tilt_rotation[0])
@@ -758,119 +717,26 @@ class Cuboidal_Leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        if (num_legs[0] == 1):
-            mesh_position = [
-                0,
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 2):
-            mesh_position = [
-                legs_separation[0] / 2, 
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 3):
-            mesh_position = [
-                legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                0,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 4):
-            mesh_position = [
-                legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                legs_separation[1] / 2,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[1] / 2,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+        n = int(num_legs[0])
+        sx, sz = legs_separation[0] / 2, legs_separation[2] / 2
+        sy_r = legs_separation[1] / 2
+        leg_specs = {
+            1: [(front_legs_size, [0,    -front_legs_size[1] / 2,  0  ])],
+            2: [(front_legs_size, [ sx,  -front_legs_size[1] / 2,  0  ]),
+                (front_legs_size, [-sx,  -front_legs_size[1] / 2,  0  ])],
+            3: [(front_legs_size, [ sx,  -front_legs_size[1] / 2,  sz ]),
+                (front_legs_size, [-sx,  -front_legs_size[1] / 2,  sz ]),
+                (rear_legs_size,  [0,    -rear_legs_size[1]  / 2, -sz ])],
+            4: [(front_legs_size, [ sx,  -front_legs_size[1] / 2,  sz ]),
+                (front_legs_size, [-sx,  -front_legs_size[1] / 2,  sz ]),
+                (rear_legs_size,  [ sy_r,-rear_legs_size[1]  / 2, -sz ]),
+                (rear_legs_size,  [-sy_r,-rear_legs_size[1]  / 2, -sz ])],
+        }
+        for leg_size, mesh_position in leg_specs[n]:
+            tmp_mesh = Cuboid(leg_size[1], leg_size[0], leg_size[2], position=mesh_position)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

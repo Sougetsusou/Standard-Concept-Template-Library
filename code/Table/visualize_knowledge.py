@@ -1,3 +1,5 @@
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from concept_template import *
 from geometry_template import *
 from scipy.spatial.transform import Rotation as Rot

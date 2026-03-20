@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, get_rodrigues_matrix
@@ -133,13 +135,13 @@ class Ladder_back(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(3 + number_of_subs[0]):
+        for i in range(3 + int(number_of_subs[0])):
             mesh_rotation = [back_rotation[0], 0, 0]
             if i < 2:
                 flag = 1 if i == 1 else -1
                 vertical_position = [flag * main_vertical_separation[0] / 2,
                                      main_vertical_piece_size[1] / 2 * np.cos(back_rotation[0]), 0]
-                self.mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
+                tmp_mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
                                    self.main_vertical_piece_size[2],
                                    position=vertical_position, rotation=mesh_rotation)
             elif i == 2:
@@ -148,21 +150,21 @@ class Ladder_back(ConceptTemplate):
                                            back_rotation[0]),
                                        (main_vertical_piece_size[1] + main_horizontal_piece_size[1]) / 2 * np.sin(
                                            back_rotation[0])]
-                self.mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
+                tmp_mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
                                    self.main_horizontal_piece_size[2],
                                    position=horizontal_position, rotation=mesh_rotation)
             else:
                 sub_position = [0, (main_vertical_piece_size[1] / 2 + sub_offset[0] - (i - 3) * interval_between_subs[
                     0]) * np.cos(back_rotation[0]),
                                 (sub_offset[0] - (i - 3) * interval_between_subs[0]) * np.sin(back_rotation[0])]
-                self.mesh = Cuboid(self.sub_horizontal_piece_size[0],
+                tmp_mesh = Cuboid(self.sub_horizontal_piece_size[0],
                                    self.main_vertical_separation[0] - self.main_vertical_piece_size[0],
                                    self.sub_horizontal_piece_size[1],
                                    position=sub_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -201,13 +203,13 @@ class Splat_back(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(3 + number_of_subs[0]):
+        for i in range(3 + int(number_of_subs[0])):
             mesh_rotation = [back_rotation[0], 0, 0]
             if i < 2:
                 flag = 1 if i == 1 else -1
                 vertical_position = [flag * main_vertical_separation[0] / 2,
                                      main_vertical_piece_size[1] / 2 * np.cos(back_rotation[0]), 0]
-                self.mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
+                tmp_mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
                                    self.main_vertical_piece_size[2],
                                    position=vertical_position, rotation=mesh_rotation)
             elif i == 2:
@@ -216,20 +218,20 @@ class Splat_back(ConceptTemplate):
                                            back_rotation[0]),
                                        (main_vertical_piece_size[1] + main_horizontal_piece_size[1]) / 2 * np.sin(
                                            back_rotation[0])]
-                self.mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
+                tmp_mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
                                    self.main_horizontal_piece_size[2],
                                    position=horizontal_position, rotation=mesh_rotation)
             else:
                 sub_position = [sub_offset[0] + (i - 3) * interval_between_subs[0],
                                 main_vertical_piece_size[1] / 2 * np.cos(back_rotation[0]), 0]
-                self.mesh = Cuboid(self.main_vertical_piece_size[1],
+                tmp_mesh = Cuboid(self.main_vertical_piece_size[1],
                                    self.sub_vertical_piece_size[0],
                                    self.sub_vertical_piece_size[1],
                                    position=sub_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -270,13 +272,13 @@ class Latice_back(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(4 + number_of_subs[0]):
+        for i in range(4 + int(number_of_subs[0])):
             mesh_rotation = [back_rotation[0], 0, 0]
             if i < 2:
                 flag = 1 if i == 1 else -1
                 vertical_position = [flag * main_vertical_separation[0] / 2,
                                      main_vertical_piece_size[1] / 2 * np.cos(back_rotation[0]), 0]
-                self.mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
+                tmp_mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
                                    self.main_vertical_piece_size[2],
                                    position=vertical_position, rotation=mesh_rotation)
             elif i == 2:
@@ -285,7 +287,7 @@ class Latice_back(ConceptTemplate):
                                            back_rotation[0]),
                                        (main_vertical_piece_size[1] + main_horizontal_piece_size[1]) / 2 * np.sin(
                                            back_rotation[0])]
-                self.mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
+                tmp_mesh = Cuboid(self.main_horizontal_piece_size[1], self.main_horizontal_piece_size[0],
                                    self.main_horizontal_piece_size[2],
                                    position=horizontal_position, rotation=mesh_rotation)
             elif i == 3:
@@ -293,7 +295,7 @@ class Latice_back(ConceptTemplate):
                                            (main_vertical_piece_size[1] / 2 + sub_horizontal_offset[0]) * np.cos(
                                                back_rotation[0]),
                                            sub_horizontal_offset[0] * np.sin(back_rotation[0])]
-                self.mesh = Cuboid(self.sub_horizontal_piece_size[0],
+                tmp_mesh = Cuboid(self.sub_horizontal_piece_size[0],
                                    self.main_vertical_separation[0] - self.main_vertical_piece_size[0],
                                    self.sub_horizontal_piece_size[1],
                                    position=sub_horizontal_position, rotation=mesh_rotation)
@@ -303,15 +305,15 @@ class Latice_back(ConceptTemplate):
                                           sub_horizontal_piece_size[0] / 2) / 2 * np.cos(back_rotation[0]),
                                          (main_vertical_piece_size[1] / 2 + sub_horizontal_offset[0] +
                                           sub_horizontal_piece_size[0] / 2) / 2 * np.sin(back_rotation[0])]
-                self.mesh = Cuboid(
+                tmp_mesh = Cuboid(
                     self.main_vertical_piece_size[1] / 2 - sub_horizontal_piece_size[0] / 2 - sub_horizontal_offset[0],
                     self.sub_vertical_piece_size[0],
                     self.sub_vertical_piece_size[1],
                     position=sub_vertical_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -352,13 +354,13 @@ class Slat_back(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(2 + number_of_subs[0]):
+        for i in range(2 + int(number_of_subs[0])):
             if i < 2:
                 flag = 1 if i == 1 else -1
                 vertical_rotation = [back_rotation[0], flag * main_vertical_rotation[0], 0]
                 vertical_position = [flag * main_vertical_separation[0] / 2,
                                      main_vertical_piece_size[1] / 2 * np.cos(back_rotation[0]), 0]
-                self.mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
+                tmp_mesh = Cuboid(self.main_vertical_piece_size[1], self.main_vertical_piece_size[0],
                                    self.main_vertical_piece_size[2],
                                    position=vertical_position, rotation=vertical_rotation, rotation_order="ZYX")
             else:
@@ -371,15 +373,15 @@ class Slat_back(ConceptTemplate):
                                            (sub_horizontal_offset[0] - (i - 2) * interval_between_subs[0]) *
                                            np.sin(back_rotation[0]) + main_vertical_piece_size[0] / 2 *
                                            np.sin(main_vertical_rotation[0]) * np.cos(back_rotation[0])]
-                self.mesh = Cuboid(
+                tmp_mesh = Cuboid(
                     self.sub_horizontal_piece_size[0],
                     self.main_vertical_separation[0] - main_vertical_piece_size[0] * np.cos(main_vertical_rotation[0]),
                     self.sub_horizontal_piece_size[1],
                     position=sub_horizontal_position, rotation=sub_horizontal_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -420,20 +422,20 @@ class Regular_leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_legs[0]):
+        for i in range(int(number_of_legs[0])):
             rotation_sign = 1 if (i % 2 == 0 or self.symmetry_mode[0] == 0) else -1
             position_sign = 1 if (i % 2 == 1) else -1
             if number_of_legs[0] == 1:
                 mesh_rotation = [front_rotation[0], central_rotation[0], 0]
                 mesh_position = [0, -front_legs_size[1] / 2 * np.cos(front_rotation[0]), 0]
-                self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation)
             if number_of_legs[0] == 2:
                 mesh_rotation = [front_rotation[0], central_rotation[0], rotation_sign * front_rotation[1]]
                 mesh_position = [position_sign * legs_separation[0] / 2 * np.cos(central_rotation[0]),
                                  -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                                  position_sign * legs_separation[0] / 2 * np.sin(central_rotation[0])]
-                self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
             if number_of_legs[0] == 3:
                 if i < 2:
@@ -444,14 +446,14 @@ class Regular_leg(ConceptTemplate):
                         -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                         -position_sign * legs_separation[0] / 2 * np.sin(central_rotation[0]) + legs_separation[
                             2] / 2 * np.cos(central_rotation[0])]
-                    self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                    tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                        position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
                 else:
                     mesh_rotation = [rear_rotation[0], central_rotation[0], rear_rotation[1]]
                     mesh_position = [position_sign * legs_separation[2] / 2 * np.sin(central_rotation[0]),
                                      -rear_legs_size[1] / 2 * np.cos(rear_rotation[0]) * np.cos(rear_rotation[1]),
                                      position_sign * legs_separation[2] / 2 * np.cos(central_rotation[0])]
-                    self.mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
+                    tmp_mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
                                        position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
             if number_of_legs[0] == 4:
                 if i < 2:
@@ -462,7 +464,7 @@ class Regular_leg(ConceptTemplate):
                         -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                         -position_sign * legs_separation[0] / 2 * np.sin(central_rotation[0]) + legs_separation[
                             2] / 2 * np.cos(central_rotation[0])]
-                    self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                    tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                        position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
                 else:
                     mesh_rotation = [rear_rotation[0], central_rotation[0], rotation_sign * rear_rotation[1]]
@@ -472,12 +474,12 @@ class Regular_leg(ConceptTemplate):
                         -rear_legs_size[1] / 2 * np.cos(rear_rotation[0]) * np.cos(rear_rotation[1]),
                         -position_sign * legs_separation[1] / 2 * np.sin(central_rotation[0]) - legs_separation[
                             2] / 2 * np.cos(central_rotation[0])]
-                    self.mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
+                    tmp_mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
                                        position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -523,7 +525,7 @@ class C_shaped_office_leg(ConceptTemplate):
                 mesh_position = [position_sign * vertical_leg_separation[0] / 2,
                                  -vertical_leg_size[1] / 2 * np.cos(vertical_leg_rotation[0]) * np.cos(
                                      vertical_leg_rotation[1]), 0]
-                self.mesh = Cuboid(self.vertical_leg_size[1], self.vertical_leg_size[0], self.vertical_leg_size[2],
+                tmp_mesh = Cuboid(self.vertical_leg_size[1], self.vertical_leg_size[0], self.vertical_leg_size[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="ZXY")
             elif i < 4:
                 mesh_rotation = [horizontal_leg_rotation[0], rotation_sign * horizontal_leg_rotation[1], 0]
@@ -538,7 +540,7 @@ class C_shaped_office_leg(ConceptTemplate):
                                      vertical_leg_rotation[0]) - (
                                          vertical_leg_size[2] + horizontal_z_leg_size[1]) / 2 * np.cos(
                                      horizontal_leg_rotation[1]) * np.cos(horizontal_leg_rotation[0])]
-                self.mesh = Cuboid(self.horizontal_z_leg_size[0], self.vertical_leg_size[0],
+                tmp_mesh = Cuboid(self.horizontal_z_leg_size[0], self.vertical_leg_size[0],
                                    self.horizontal_z_leg_size[1],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="YXZ")
             else:
@@ -553,7 +555,7 @@ class C_shaped_office_leg(ConceptTemplate):
                                      vertical_leg_rotation[0]) - (vertical_leg_size[2] + horizontal_z_leg_size[1] * 2 +
                                                                   horizontal_x_leg_size[0]) / 2 * np.cos(
                                      horizontal_leg_rotation[1]) * np.cos(horizontal_leg_rotation[0])]
-                self.mesh = Cuboid(self.horizontal_z_leg_size[0],
+                tmp_mesh = Cuboid(self.horizontal_z_leg_size[0],
                                    vertical_leg_separation[0] + vertical_leg_size[0] + vertical_leg_size[1] * np.sin(
                                        vertical_leg_rotation[1]) - 2 * (
                                            horizontal_z_leg_size[1] + vertical_leg_size[2] / 2 +
@@ -561,9 +563,9 @@ class C_shaped_office_leg(ConceptTemplate):
                                    self.horizontal_x_leg_size[0],
                                    position=mesh_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -603,11 +605,11 @@ class Star_leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(1 + number_of_sub_legs[0]):
+        for i in range(1 + int(number_of_sub_legs[0])):
             if i == 0:
                 mesh_rotation = [horizontal_rotation[0], central_rotation[0], 0]
                 mesh_position = [0, 0, 0]
-                self.mesh = Cylinder(vertical_sizes[1], vertical_sizes[0], position=mesh_position,
+                tmp_mesh = Cylinder(vertical_sizes[1], vertical_sizes[0], position=mesh_position,
                                      rotation=mesh_rotation)
             else:
                 sub_rotation = np.pi / number_of_sub_legs[0] * (i - 1) * 2
@@ -625,7 +627,7 @@ class Star_leg(ConceptTemplate):
                         central_rotation[0])) * np.cos(horizontal_rotation[0]) + (
                             -vertical_sizes[1] + sub_sizes[1] / 2 + sub_central_offset[0]) * np.sin(
                         horizontal_rotation[0]) + vertical_sizes[1] / 2 * np.sin(horizontal_rotation[0])]
-                self.mesh = Cuboid(sub_sizes[1], sub_sizes[0], sub_sizes[2])
+                tmp_mesh = Cuboid(sub_sizes[1], sub_sizes[0], sub_sizes[2])
 
                 tilt_mat = np.array(get_rodrigues_matrix([1, 0, 0], tilt_angle[0]))
                 self.mesh.vertices = np.matmul(self.mesh.vertices, tilt_mat.T)
@@ -641,9 +643,9 @@ class Star_leg(ConceptTemplate):
                 self.mesh.vertices = apply_transformation(self.mesh.vertices, mesh_position, [0, 0, 0])
 
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -699,7 +701,7 @@ class Regular_leg_with_splat(ConceptTemplate):
                     -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                     -position_sign * legs_separation[0] / 2 * np.sin(central_rotation[0]) + legs_separation[
                         2] / 2 * np.cos(central_rotation[0])]
-                self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
             else:
                 mesh_rotation = [rear_rotation[0], central_rotation[0], rotation_sign * rear_rotation[1]]
@@ -709,12 +711,12 @@ class Regular_leg_with_splat(ConceptTemplate):
                         -rear_legs_size[1] / 2 * np.cos(rear_rotation[0]) * np.cos(rear_rotation[1]),
                         -position_sign * legs_separation[1] / 2 * np.sin(central_rotation[0]) - legs_separation[
                             2] / 2 * np.cos(central_rotation[0])]
-                self.mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
+                tmp_mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="XZY")
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         if bridging_bars_existance[0] == 1:
             mesh_rotation = [front_rotation[0], central_rotation[0], 0]
@@ -916,10 +918,10 @@ class Solid_armrest(ConceptTemplate):
             mesh_position = [-flag * armrest_separation[0] / 2,
                              size[1] / 2 * np.cos(armrest_rotation[1]) * np.cos(armrest_rotation[0]) - size[
                                  2] / 2 * np.sin(armrest_rotation[0]), 0]
-            self.mesh = Cuboid(size[1], size[0], size[2], position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            tmp_mesh = Cuboid(size[1], size[0], size[2], position=mesh_position, rotation=mesh_rotation)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -971,7 +973,7 @@ class Office_armrest(ConceptTemplate):
                                          supports_contact_offset[0] - vertical_support_sizes[1] / 2 * np.sin(
                                      vertical_support_rotation[0])) * np.tan(horizontal_support_rotation[0]),
                                  0]
-                self.mesh = Cuboid(horizontal_support_sizes[1], horizontal_support_sizes[0],
+                tmp_mesh = Cuboid(horizontal_support_sizes[1], horizontal_support_sizes[0],
                                    horizontal_support_sizes[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="YXZ")
             else:
@@ -980,13 +982,13 @@ class Office_armrest(ConceptTemplate):
                                  vertical_support_sizes[1] / 2 * np.cos(vertical_support_rotation[0]) * np.cos(
                                      armrest_rotation[0]),
                                  supports_contact_offset[0]]
-                self.mesh = Cuboid(vertical_support_sizes[1], vertical_support_sizes[0],
+                tmp_mesh = Cuboid(vertical_support_sizes[1], vertical_support_sizes[0],
                                    vertical_support_sizes[2],
                                    position=mesh_position, rotation=mesh_rotation, rotation_order="YXZ")
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

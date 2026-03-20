@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, adjust_position_from_rotation, list_add
@@ -315,20 +317,27 @@ class Controller_With_Button(ConceptTemplate):
         faces_list.append(self.mesh.faces + total_num_vertices)
         total_num_vertices += len(self.mesh.vertices)
 
+        button_sizes   = [button_1_size,   button_2_size,   button_3_size,   button_4_size,
+                          button_5_size,   button_6_size,   button_7_size,   button_8_size]
+        button_offsets = [button_1_offset, button_2_offset, button_3_offset, button_4_offset,
+                          button_5_offset, button_6_offset, button_7_offset, button_8_offset]
+
         button_rotation = np.arctan((bottom_size[3] - bottom_size[2]) / bottom_size[1])
-        for i in range(num_buttons[0]):
+        for i in range(int(num_buttons[0])):
+            b_size   = button_sizes[i]
+            b_offset = button_offsets[i]
             mesh_position = [
-                locals()['button_%d_offset'%(i+1)][0], 
-                locals()['button_%d_offset'%(i+1)][1] * np.cos(button_rotation) + locals()['button_%d_size'%(i+1)][2] / 2 * np.sin(button_rotation), 
-                (bottom_size[2] + bottom_size[3]) / 2 + locals()['button_%d_size'%(i+1)][2] / 2 * np.cos(button_rotation) - locals()['button_%d_offset'%(i+1)][1] * np.sin(button_rotation)
+                b_offset[0],
+                b_offset[1] * np.cos(button_rotation) + b_size[2] / 2 * np.sin(button_rotation),
+                (bottom_size[2] + bottom_size[3]) / 2 + b_size[2] / 2 * np.cos(button_rotation) - b_offset[1] * np.sin(button_rotation)
             ]
             mesh_rotation = [-button_rotation, 0, 0]
-            self.mesh = Cuboid(locals()['button_%d_size'%(i+1)][1], locals()['button_%d_size'%(i+1)][0], locals()['button_%d_size'%(i+1)][2], 
+            tmp_mesh = Cuboid(b_size[1], b_size[0], b_size[2],
                                position = mesh_position,
                                rotation = mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

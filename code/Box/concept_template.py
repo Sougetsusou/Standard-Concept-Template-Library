@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -226,7 +228,7 @@ class Regular_Cover(ConceptTemplate):
 
         self.semantic = 'Cover'
 
-class Cuboidal_Leg(ConceptTemplate):
+class Box_Cuboidal_Leg(ConceptTemplate):
     def __init__(self, front_legs_size, rear_legs_size, legs_separation, num_legs, position = [0, 0, 0], rotation = [0, 0, 0]):
 
         # Process rotation param
@@ -244,119 +246,26 @@ class Cuboidal_Leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        if (num_legs[0] == 1):
-            mesh_position = [
-                0,
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 2):
-            mesh_position = [
-                legs_separation[0] / 2, 
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                0
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 3):
-            mesh_position = [
-                legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                0,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-        elif (num_legs[0] == 4):
-            mesh_position = [
-                legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[0] / 2,
-                -front_legs_size[1] / 2,
-                legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(front_legs_size[1], front_legs_size[0], front_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                legs_separation[1] / 2,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
-
-            mesh_position = [
-                -legs_separation[1] / 2,
-                -rear_legs_size[1] / 2,
-                -legs_separation[2] / 2
-            ]
-            self.mesh = Cuboid(rear_legs_size[1], rear_legs_size[0], rear_legs_size[2],
-                               position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+        n = int(num_legs[0])
+        sx, sz = legs_separation[0] / 2, legs_separation[2] / 2
+        sy_r = legs_separation[1] / 2
+        leg_specs = {
+            1: [(front_legs_size, [0,               -front_legs_size[1] / 2,  0  ])],
+            2: [(front_legs_size, [ sx,              -front_legs_size[1] / 2,  0  ]),
+                (front_legs_size, [-sx,              -front_legs_size[1] / 2,  0  ])],
+            3: [(front_legs_size, [ sx,              -front_legs_size[1] / 2,  sz ]),
+                (front_legs_size, [-sx,              -front_legs_size[1] / 2,  sz ]),
+                (rear_legs_size,  [0,                -rear_legs_size[1]  / 2, -sz ])],
+            4: [(front_legs_size, [ sx,              -front_legs_size[1] / 2,  sz ]),
+                (front_legs_size, [-sx,              -front_legs_size[1] / 2,  sz ]),
+                (rear_legs_size,  [ sy_r,            -rear_legs_size[1]  / 2, -sz ]),
+                (rear_legs_size,  [-sy_r,            -rear_legs_size[1]  / 2, -sz ])],
+        }
+        for leg_size, mesh_position in leg_specs[n]:
+            tmp_mesh = Cuboid(leg_size[1], leg_size[0], leg_size[2], position=mesh_position)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

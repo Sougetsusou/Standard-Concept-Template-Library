@@ -1,9 +1,12 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
 from knowledge_utils import *
 import trimesh
+from concept_templates_shared import Single_Cylinder
 
 class Cylindrical_Body(ConceptTemplate):
     def __init__(self, outer_size, inner_size, position = [0, 0, 0], rotation = [0, 0, 0]):
@@ -141,18 +144,21 @@ class Multilevel_Body(ConceptTemplate):
         faces_list.append(self.top_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.top_mesh.vertices)
 
+        level_top_radii = [level_1_top_radius, level_2_top_radius, level_3_top_radius, level_4_top_radius]
+        level_heights   = [level_1_height,     level_2_height,     level_3_height,     level_4_height]
+
         delta_height = level_1_height[0] / 2
-        for i in range(num_levels[0] - 1):
-            delta_height += locals()['level_'+ str(i+2) +'_height'][0] / 2
+        for i in range(int(num_levels[0]) - 1):
+            delta_height += level_heights[i+1][0] / 2
             top_mesh_position = [0, delta_height, 0]
-            delta_height += locals()['level_'+ str(i+2) +'_height'][0] / 2
-            self.top_mesh = Ring(locals()['level_'+ str(i+2) +'_height'][0], locals()['level_'+ str(i+2) +'_top_radius'][0], locals()['level_'+ str(i+2) +'_top_radius'][1], 
-                                 outer_bottom_radius = locals()['level_'+ str(i+1) +'_top_radius'][0],
-                                 inner_bottom_radius = locals()['level_'+ str(i+1) +'_top_radius'][1],
+            delta_height += level_heights[i+1][0] / 2
+            tmp_top_mesh = Ring(level_heights[i+1][0], level_top_radii[i+1][0], level_top_radii[i+1][1],
+                                 outer_bottom_radius = level_top_radii[i][0],
+                                 inner_bottom_radius = level_top_radii[i][1],
                                  position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
 
         self.vertices = np.concatenate(vertices_list)
@@ -281,33 +287,3 @@ class Curved_Handle(ConceptTemplate):
         self.semantic = 'Handle'
 
 
-class Single_Cylinder(ConceptTemplate):
-    def __init__(self, size, position = [0, 0, 0], rotation = [0, 0, 0]):
-
-        # Process rotation param
-        rotation = [x / 180 * np.pi for x in rotation]
-        super().__init__(position, rotation)
-
-        # Record Parameters
-        self.size = size
-
-        # Instantiate component geometries
-        vertices_list = []
-        faces_list = []
-        total_num_vertices = 0
-
-        self.mesh = Cylinder(size[1], size[0])
-        vertices_list.append(self.mesh.vertices)
-        faces_list.append(self.mesh.faces + total_num_vertices)
-        total_num_vertices += len(self.mesh.vertices)
-
-        self.vertices = np.concatenate(vertices_list)
-        self.faces = np.concatenate(faces_list)
-
-        # Global Transformation
-        self.vertices = apply_transformation(self.vertices, position, rotation)
-
-        self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
-        self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))
-
-        self.semantic = 'Cylinder'

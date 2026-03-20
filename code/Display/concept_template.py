@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -307,18 +309,18 @@ class CuboidalRear_Support(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_supports[0]):
+        for i in range(int(number_of_supports[0])):
             mesh_position = [
                 (separation[0] + size[0]) * i, 
                 -size[1] / 2, 
                 -size[2] / 2
             ]
-            self.mesh = Cuboid(size[1], size[0], size[2], 
+            tmp_mesh = Cuboid(size[1], size[0], size[2], 
                                position=mesh_position)
-            self.mesh.vertices = apply_transformation(self.mesh.vertices, position=[0, 0, 0], rotation=[support_rotation[0], 0, 0])
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            tmp_mesh.vertices = apply_transformation(tmp_mesh.vertices, position=[0, 0, 0], rotation=[support_rotation[0], 0, 0])
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -349,17 +351,17 @@ class Cuboidal_Support(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_supports[0]):
+        for i in range(int(number_of_supports[0])):
             mesh_position = [
                 (separation[0] + size[0]) * i,
                 -size[1] / 2,
                 0,
             ]
-            self.mesh = Cuboid(size[1], size[0], size[2], 
+            tmp_mesh = Cuboid(size[1], size[0], size[2], 
                                position=mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

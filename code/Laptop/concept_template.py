@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -101,19 +103,19 @@ class Cuboidal_Connector(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
         
-        for i in range(number_of_connector[0]):
+        for i in range(int(number_of_connector[0])):
             back_mesh_position = [
                 offset[0] + i * size[0] + sum(separation[0:i]) + size[0] / 2, 
                 offset[1], 
                 offset[2]
             ]
             back_mesh_rotation = [connector_rotation[0], 0, 0]
-            self.back_mesh = Cuboid(size[1], size[0], size[2],
+            tmp_back_mesh = Cuboid(size[1], size[0], size[2],
                                     position=back_mesh_position,
                                     rotation=back_mesh_rotation)
-            vertices_list.append(self.back_mesh.vertices)
-            faces_list.append(self.back_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.back_mesh.vertices)
+            vertices_list.append(tmp_back_mesh.vertices)
+            faces_list.append(tmp_back_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_back_mesh.vertices)
 
         self.vertices=np.concatenate(vertices_list)
         self.faces=np.concatenate(faces_list)
@@ -144,19 +146,19 @@ class Cylindrical_Connector(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
          
-        for i in range(number_of_connector[0]):
+        for i in range(int(number_of_connector[0])):
             back_mesh_position = [
                 offset[0] + i * size[1] + sum(separation[0:i]) + size[1] / 2, 
                 offset[1], 
                 offset[2]
             ]
             back_mesh_rotation = [0, 0, np.pi / 2]
-            self.back_mesh = Cylinder(size[1], size[0], size[0],
+            tmp_back_mesh = Cylinder(size[1], size[0], size[0],
                                       position=back_mesh_position,
                                       rotation=back_mesh_rotation)
-            vertices_list.append(self.back_mesh.vertices)
-            faces_list.append(self.back_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.back_mesh.vertices)
+            vertices_list.append(tmp_back_mesh.vertices)
+            faces_list.append(tmp_back_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_back_mesh.vertices)
 
         self.vertices=np.concatenate(vertices_list)
         self.faces=np.concatenate(faces_list)

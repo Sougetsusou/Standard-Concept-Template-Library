@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -409,7 +411,7 @@ class Star_Shaped_Base(ConceptTemplate):
         faces_list.append(self.top_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.top_mesh.vertices)
 
-        for i in range(num_legs[0]):
+        for i in range(int(num_legs[0])):
 
             rot = np.pi * 2 / num_legs[0] * i
             claw_mesh_rotation = [
@@ -425,12 +427,12 @@ class Star_Shaped_Base(ConceptTemplate):
                 y__,
                 z_
             ]
-            self.claw_mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2],
+            tmp_claw_mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2],
                                     position = claw_mesh_position,
                                     rotation = claw_mesh_rotation)
-            vertices_list.append(self.claw_mesh.vertices)
-            faces_list.append(self.claw_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.claw_mesh.vertices)
+            vertices_list.append(tmp_claw_mesh.vertices)
+            faces_list.append(tmp_claw_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_claw_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -528,18 +530,18 @@ class Table_Like_Base(ConceptTemplate):
         faces_list.append(self.ring_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.ring_mesh.vertices)
 
-        for i in range(num_legs[0]):
+        for i in range(int(num_legs[0])):
             rotation_tmp = np.pi * 2 / num_legs[0] * i
             leg_mesh_position = [
                 leg_seperation[0] * np.cos(rotation_tmp),
                 -circle_size[2] / 2 - leg_size[1] / 2,
                 leg_seperation[0] * np.sin(rotation_tmp)
             ]
-            self.leg_mesh = Cylinder(leg_size[1], leg_size[0], 
+            tmp_leg_mesh = Cylinder(leg_size[1], leg_size[0], 
                                      position = leg_mesh_position)
-            vertices_list.append(self.leg_mesh.vertices)
-            faces_list.append(self.leg_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.leg_mesh.vertices)
+            vertices_list.append(tmp_leg_mesh.vertices)
+            faces_list.append(tmp_leg_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_leg_mesh.vertices)
 
             if has_bottom_part[0] == 1:
                 bottom_mesh_position = [

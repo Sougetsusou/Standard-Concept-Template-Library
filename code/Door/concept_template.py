@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -282,8 +284,8 @@ class Standard_Hinge(ConceptTemplate):
         total_num_vertices = 0
 
         offset = offset_1
-        for existence in range(existence_of_door[0] + existence_of_door[1]):
-            for i in range(number_of_hinge[0]):
+        for existence in range(int(existence_of_door[0] + existence_of_door[1])):
+            for i in range(int(number_of_hinge[0])):
                 tmp_mesh_position = [
                     offset[0],
                     offset[1] + size[1] * (i + 0.5) + sum(separation[0:i]),

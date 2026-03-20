@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -202,20 +204,24 @@ class Round_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_switch[0]):
+        offsets = [offset_1, offset_2, offset_3, offset_4]
+
+        for i in range(int(number_of_switch[0])):
             base_mesh_position = [
-                locals()['offset_%d'%(i+1)][0],
-                locals()['offset_%d'%(i+1)][1],
+                offsets[i][0],
+                offsets[i][1],
                 offset_Z[0]
             ]
             base_mesh_rotation = [np.pi / 2 + switch_rotation[0], 0, 0]
-            self.base_mesh = Cylinder(size[1], size[0], size[0],
+            tmp_base_mesh = Cylinder(size[1], size[0], size[0],
                                       position=base_mesh_position,
                                       rotation=base_mesh_rotation)
-            vertices_list.append(self.base_mesh.vertices)
-            faces_list.append(self.base_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.base_mesh.vertices)
+            vertices_list.append(tmp_base_mesh.vertices)
+            faces_list.append(tmp_base_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_base_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -247,20 +253,22 @@ class FlipX_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_switch[0]):
+        for i in range(int(number_of_switch[0])):
             mesh_position = [
                 (separation[0] + size[0]) * i, 
                 0, 
                 0
             ]
             mesh_rotation = [switch_rotation[0], 0, 0]
-            self.mesh = Cuboid(size[1], size[0], size[2],
+            tmp_mesh = Cuboid(size[1], size[0], size[2],
                                position=mesh_position,
                                rotation=mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -292,20 +300,22 @@ class FlipY_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_switch[0]):
+        for i in range(int(number_of_switch[0])):
             mesh_position = [
                 (separation[0] + size[0]) * i, 
                 0, 
                 0
             ]
             mesh_rotation = [0, switch_rotation[0], 0]
-            self.mesh = Cuboid(size[1], size[0], size[2],
+            tmp_mesh = Cuboid(size[1], size[0], size[2],
                                position=mesh_position,
                                rotation=mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -339,19 +349,19 @@ class Lever_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_switch[0]):
+        for i in range(int(number_of_switch[0])):
             base_mesh_position = [
                 (separation[0] + main_size[0]) * i,
                 0,
                 base_size[1] / 2,
             ]
             base_mesh_rotation = [np.pi / 2, 0, 0]
-            self.base_mesh = Cylinder(base_size[1], base_size[0], base_size[0],
+            tmp_base_mesh = Cylinder(base_size[1], base_size[0], base_size[0],
                                       position=base_mesh_position,
                                       rotation=base_mesh_rotation)
-            vertices_list.append(self.base_mesh.vertices)
-            faces_list.append(self.base_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.base_mesh.vertices)
+            vertices_list.append(tmp_base_mesh.vertices)
+            faces_list.append(tmp_base_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_base_mesh.vertices)
 
             main_mesh_position = [
                 (separation[0] + main_size[0]) * i,
@@ -359,16 +369,16 @@ class Lever_Switch(ConceptTemplate):
                 main_size[2] / 2,
             ]
             main_mesh_rotation = [np.pi / 2, 0, 0]
-            self.main_mesh = Cylinder(main_size[2], main_size[1], main_size[0],
+            tmp_main_mesh = Cylinder(main_size[2], main_size[1], main_size[0],
                                       position=main_mesh_position,
                                       rotation=main_mesh_rotation)
-            self.main_mesh.vertices = apply_transformation(
-                self.main_mesh.vertices,
+            tmp_main_mesh.vertices = apply_transformation(
+                tmp_main_mesh.vertices,
                 position=[0, 0, 0],
                 rotation=[switch_rotation[0], 0, 0],
             )
-            self.main_mesh.vertices = apply_transformation(
-                self.main_mesh.vertices,
+            tmp_main_mesh.vertices = apply_transformation(
+                tmp_main_mesh.vertices,
                 position=[
                     inter_offset[0],
                     inter_offset[1],
@@ -376,10 +386,12 @@ class Lever_Switch(ConceptTemplate):
                 ],
                 rotation=[0, 0, 0],
             )
-            vertices_list.append(self.main_mesh.vertices)
-            faces_list.append(self.main_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.main_mesh.vertices)
+            vertices_list.append(tmp_main_mesh.vertices)
+            faces_list.append(tmp_main_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_main_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -410,19 +422,21 @@ class Cuboidal_Plug(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for j in range(row_of_contact[0]):
-            for i in range(column_of_contact[0]):
+        for j in range(int(row_of_contact[0])):
+            for i in range(int(column_of_contact[0])):
                 mesh_position = [
                     (interval[0] + size[0]) * i,
                     (interval[1] + size[1]) * j,
                     -size[2] / 2,
                 ],
-                self.mesh = Cuboid(size[1], size[0], size[2],
+                tmp_mesh = Cuboid(size[1], size[0], size[2],
                                    position=mesh_position)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -492,6 +506,8 @@ class Standard_Plug(ConceptTemplate):
         faces_list.append(self.mesh.faces + total_num_vertices)
         total_num_vertices += len(self.mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 
@@ -522,21 +538,23 @@ class Cylindrical_Plug(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for j in range(row_of_contact[0]):
-            for i in range(column_of_contact[0]):
+        for j in range(int(row_of_contact[0])):
+            for i in range(int(column_of_contact[0])):
                 mesh_position = [
                     (interval[0] + size[0] * 2) * i,
                     (interval[1] + size[0] * 2) * j,
                     -size[1] / 2,
                 ]
                 mesh_rotation=[np.pi / 2, 0, 0]
-                self.mesh = Cylinder(size[1], size[0], size[0],
+                tmp_mesh = Cylinder(size[1], size[0], size[0],
                                      position=mesh_position,
                                      rotation=mesh_rotation)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
+        if not vertices_list:
+            raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
 

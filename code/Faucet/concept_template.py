@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, get_rodrigues_matrix
@@ -871,7 +873,7 @@ class Knob_Switch(ConceptTemplate):
         total_num_vertices = 0
 
         for offset in self.offsets:
-            for i in range(number_of_cylinder[0]):
+            for i in range(int(number_of_cylinder[0])):
                 size = self.sizes[i]
                 tmp_mesh = Cylinder(size[1], size[0], size[0],
                                     position=offset[i])
@@ -945,7 +947,7 @@ class HandleY_Switch(ConceptTemplate):
         total_num_vertices = 0
 
         for offset in self.offsets:
-            for i in range(number_of_cube[0]):
+            for i in range(int(number_of_cube[0])):
                 size = self.sizes[i]
                 tmp_mesh = Cuboid(size[1], size[0], size[2],
                                   position=offset[i])
@@ -1019,7 +1021,7 @@ class HandleZ_Switch(ConceptTemplate):
         total_num_vertices = 0
 
         for offset in self.offsets:
-            for i in range(number_of_cube[0]):
+            for i in range(int(number_of_cube[0])):
                 size = self.sizes[i]
                 tmp_mesh = Cuboid(size[1], size[0], size[2],
                                   position=offset[i],
@@ -1506,7 +1508,7 @@ class RotaryX_Switch(ConceptTemplate):
             faces_list.append(tmp_mesh.faces + total_num_vertices)
             total_num_vertices += len(tmp_mesh.vertices)
 
-            for i in range(number_of_sub[0]):
+            for i in range(int(number_of_sub[0])):
                 tmp_mesh_position = [0, np.cos(tilt_angle[0]) * sub_size[1] / 2, 0]
                 tmp_mesh_rotation = [0, 0, -tilt_angle[0]]
                 tmp_mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2],
@@ -1566,7 +1568,7 @@ class RotaryY_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for j in range(number_of_switch[0]):
+        for j in range(int(number_of_switch[0])):
             tmp_mesh_position = [
                 offset_x[j],
                 main_size_1[1] / 2,
@@ -1589,7 +1591,7 @@ class RotaryY_Switch(ConceptTemplate):
             faces_list.append(tmp_mesh.faces + total_num_vertices)
             total_num_vertices += len(tmp_mesh.vertices)
 
-            for i in range(number_of_sub[0]):
+            for i in range(int(number_of_sub[0])):
                 tmp_mesh_position = [0, 0, np.cos(tilt_angle[0]) * sub_size[2] / 2]
                 tmp_mesh_rotation = [-tilt_angle[0], 0, 0]
 
@@ -1649,7 +1651,7 @@ class RotaryZ_Switch(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for j in range(number_of_switch[0]):
+        for j in range(int(number_of_switch[0])):
             tmp_mesh_position = [
                 offset_x[j],
                 0,
@@ -1676,7 +1678,7 @@ class RotaryZ_Switch(ConceptTemplate):
             faces_list.append(tmp_mesh.faces + total_num_vertices)
             total_num_vertices += len(tmp_mesh.vertices)
 
-            for i in range(number_of_sub[0]):
+            for i in range(int(number_of_sub[0])):
                 tmp_mesh_position = [np.cos(tilt_angle[0]) * sub_size[0] / 2, 0, 0]
                 tmp_mesh_rotation = [0, -tilt_angle[0], 0]
                 tmp_mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2],

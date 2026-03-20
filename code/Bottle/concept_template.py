@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -24,21 +26,23 @@ class Multilevel_Body(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
+        level_sizes = [level_1_size, level_2_size, level_3_size, level_4_size]
+
         self.bottom_mesh = Cylinder(level_1_size[1], level_1_size[0], level_1_size[2])
         vertices_list.append(self.bottom_mesh.vertices)
         faces_list.append(self.bottom_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.bottom_mesh.vertices)
 
         delta_height = level_1_size[1] / 2
-        for i in range(num_levels[0] - 1):
-            delta_height += locals()['level_'+ str(i+2) +'_size'][1] / 2
+        for i in range(int(num_levels[0]) - 1):
+            delta_height += level_sizes[i+1][1] / 2
             mesh_position = [0, delta_height, 0]
-            delta_height += locals()['level_'+ str(i+2) +'_size'][1] / 2
-            self.mesh = Cylinder(locals()['level_'+ str(i+2) +'_size'][1], locals()['level_'+ str(i+2) +'_size'][0], locals()['level_'+ str(i+1) +'_size'][0], 
+            delta_height += level_sizes[i+1][1] / 2
+            tmp_mesh = Cylinder(level_sizes[i+1][1], level_sizes[i+1][0], level_sizes[i][0],
                                  position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

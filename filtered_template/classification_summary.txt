@@ -1,0 +1,449 @@
+Template Classification Summary
+==================================================
+
+Armrest: 2 classes
+  - Solid_armrest (from Chair)
+  - Office_armrest (from Chair)
+
+Back: 5 classes
+  - Solid_back (from Chair)
+  - Ladder_back (from Chair)
+  - Splat_back (from Chair)
+  - Latice_back (from Chair)
+  - Slat_back (from Chair)
+
+Baffle: 2 classes
+  - Rectangular_Baffle (from Pliers)
+  - Curved_Baffle (from Pliers)
+
+Base: 16 classes
+  - Cylindrical_Base (from Globe)
+  - Cuboidal_Base (from Globe)
+  - Star_Shaped_Base (from Globe)
+  - Special_Base (from Globe)
+  - Table_Like_Base (from Globe)
+  - Cuboidal_Base (from Display)
+  - Round_Base (from Display)
+  - TShaped_Base (from Display)
+  - Vshaped_Base (from Display)
+  - Cuboidal_Base (from Faucet)
+  - Cylindrical_Base (from Faucet)
+  - Curved_Base (from Faucet)
+  - UShapedXZ_Base (from Faucet)
+  - UShapedYZ_Base (from Faucet)
+  - Round_Base (from Faucet)
+  - Regular_Base (from Laptop)
+
+Blade: 6 classes
+  - Cusp_Blade (from Scissors)
+  - Curved_Blade (from Scissors)
+  - Regular_Blade (from Shaver)
+  - Cuboidal_Blade (from Knife)
+  - Cusp_Blade (from Knife)
+  - Curved_Blade (from Knife)
+
+Board: 2 classes
+  - Regular_backboard (from Table)
+  - Regular_partition (from Table)
+
+Body: 51 classes
+  - Cuboidal_Body (from Microwave)
+  - Cuboidal_Body (from Safe)
+  - Mutiple_Layer_Body (from Safe)
+  - Cuboidal_Body (from Box)
+  - Cylindrical_Body (from Gluestick)
+  - Toothpaste_Body (from Gluestick)
+  - Cuboidal_Body (from Gluestick)
+  - Standard_Body (from Stapler)
+  - Cuboidal_Body (from Oven)
+  - Double_Layer_Body (from Oven)
+  - Flat_Top (from Oven)
+  - Cuboidal_Body (from Dishwasher)
+  - Double_Layer_Body (from Dishwasher)
+  - Storagefurniture_body (from StorageFurniture)
+  - Cylindrical_Barrel (from Pen)
+  - Double_Layer_Barrel (from Pen)
+  - Regular_Body (from USB)
+  - RoundEnded_Body (from USB)
+  - Cylindrical_Body (from KitchenPot)
+  - Semi_Spherical_Body (from Kettle)
+  - Spherical_Cylindrical_Body (from Kettle)
+  - Multilevel_Body (from Kettle)
+  - Cylindrical_Body (from Bucket)
+  - Prismatic_Body (from Bucket)
+  - Regular_desktop (from Table)
+  - Cylindrical_desktop (from Table)
+  - L_type_desktop (from Table)
+  - Cylindrical_Body (from Mug)
+  - Prismatic_Body (from Mug)
+  - Multilevel_Body (from Mug)
+  - Standard_Base (from Switch)
+  - Frame_Base (from Switch)
+  - Parallel_Base (from Switch)
+  - Front_Facing_Roller_Body (from Washingmachine)
+  - Upright_Roller_Body (from Washingmachine)
+  - Cuboidal_Body (from Washingmachine)
+  - Multilevel_Body (from Dispenser)
+  - Cuboidal_Body (from Dispenser)
+  - Cylindrical_body (from Shampoo)
+  - Cuboidal_body (from Shampoo)
+  - Toothpaste_body (from Shampoo)
+  - Cuboidal_Body (from Lighter)
+  - Cambered_Body (from Lighter)
+  - Double_Layer_Body (from Lighter)
+  - Cuboidal_Body (from Refrigerator)
+  - Double_Layer_Body (from Refrigerator)
+  - Left_Right_Double_Layer_Body (from Refrigerator)
+  - Multilevel_Body (from Bottle)
+  - Cylindrical_Body (from Trashcan)
+  - Prismatic_Body (from Trashcan)
+  - Separated_Cylindrical_Body (from Trashcan)
+
+Bracket: 3 classes
+  - Semi_Ring_Bracket (from Globe)
+  - Tilted_Bracket (from Globe)
+  - Enclosed_Bracket (from Globe)
+
+Buffle: 1 classes
+  - Cuboidal_Baffle (from Oven)
+
+Burner: 1 classes
+  - Top_With_Burner (from Oven)
+
+Button: 8 classes
+  - Controller_With_Button (from Microwave)
+  - Controller_With_Button (from Oven)
+  - Cylindrical_Button (from Pen)
+  - Bistratal_Button (from Pen)
+  - Controller_With_Button (from Washingmachine)
+  - L_Shaped_Button (from Lighter)
+  - Double_Cambered_Button (from Lighter)
+  - Regular_Button (from Knife)
+
+Cabinet: 1 classes
+  - Regular_cabinet (from Table)
+
+Cap: 6 classes
+  - Single_Cap (from Pen)
+  - Regular_Cap (from USB)
+  - SquareEnded_Cap (from USB)
+  - RoundEnded_Cap (from USB)
+  - Cylindrical_cap (from Shampoo)
+  - Regular_cap (from Shampoo)
+
+Clip: 2 classes
+  - Trifold_Clip (from Pen)
+  - Curved_Clip (from Pen)
+
+Connector: 8 classes
+  - Cylindrical_Connecter (from Safe)
+  - T_Shaped_Connecter (from Safe)
+  - Simplied_Connector (from USB)
+  - Regular_Connector (from USB)
+  - Standard_Connector (from Eyeglasses)
+  - Dual_Connector (from Eyeglasses)
+  - Cuboidal_Connector (from Laptop)
+  - Cylindrical_Connector (from Laptop)
+
+Controller: 1 classes
+  - Regular_Controller (from Safe)
+
+Cover: 19 classes
+  - Fourfold_Cover (from Box)
+  - Regular_Cover (from Box)
+  - Domed_Cover (from Gluestick)
+  - Cylindrical_Cover (from Gluestick)
+  - Simplified_Cover (from Stapler)
+  - Carved_Cover (from Stapler)
+  - Cuboidal_Topcover (from Dishwasher)
+  - Cylindrical_Cover (from KitchenPot)
+  - Carved_Cylindrical_Cover (from KitchenPot)
+  - Semi_Spherical_Cover (from KitchenPot)
+  - Standard_Cover (from Kettle)
+  - Regular_Cover (from Lighter)
+  - Cylindrical_Cover (from Trashcan)
+  - Cuboidal_Cover (from Trashcan)
+  - Double_Layer_Cuboidal_Cover (from Trashcan)
+  - Cylindrical_Hollow_Cover (from Trashcan)
+  - Cuboidal_Hollow_Cover (from Trashcan)
+  - Holed_Cylindrical_Cover (from Trashcan)
+  - Holed_Cuboidal_Cover (from Trashcan)
+
+Cylinder: 2 classes
+  - Single_Cylinder (from Bucket)
+  - Single_Cylinder (from Mug)
+
+Dial: 1 classes
+  - Cylindrical_Dial (from Safe)
+
+Door: 17 classes
+  - Cuboidal_Door (from Microwave)
+  - Sunken_Door (from Microwave)
+  - Cuboidal_Door (from Safe)
+  - Behind_Double_Layer_Door (from Safe)
+  - Front_Double_Layer_Door (from Safe)
+  - Sunken_Door (from Safe)
+  - Cuboidal_Door (from Oven)
+  - Sunken_Door (from Oven)
+  - Cuboidal_Door (from Dishwasher)
+  - Sunken_Door (from Dishwasher)
+  - Regular_door (from StorageFurniture)
+  - Regular_door (from Table)
+  - Roller_Door (from Washingmachine)
+  - Cuboidal_Door (from Washingmachine)
+  - Cuboidal_Door (from Refrigerator)
+  - Sunken_Door (from Refrigerator)
+  - Standard_Door (from Door)
+
+Doorframe: 1 classes
+  - Standard_Doorframe (from Door)
+
+Drawer: 2 classes
+  - Regular_drawer (from StorageFurniture)
+  - Regular_drawer (from Table)
+
+Frame: 1 classes
+  - Standard_Windowframe (from Window)
+
+Glasses: 4 classes
+  - Trapezoidal_Glasses (from Eyeglasses)
+  - TrapezoidalFrame_Glasses (from Eyeglasses)
+  - Round_Glasses (from Eyeglasses)
+  - RoundFrame_Glasses (from Eyeglasses)
+
+Gripper: 2 classes
+  - Cusp_Gripper (from Pliers)
+  - Curved_Gripper (from Pliers)
+
+Guard: 1 classes
+  - Standard_Guard (from Knife)
+
+Handle: 65 classes
+  - Cuboidal_Handle (from Microwave)
+  - Trifold_Handle (from Microwave)
+  - Trifold_Curve_Handle (from Microwave)
+  - Curve_Handle (from Microwave)
+  - Trifold_Handle (from Safe)
+  - Claw_Handle (from Safe)
+  - Round_Handle (from Safe)
+  - Cuboidal_Handle (from Oven)
+  - Trifold_Handle (from Oven)
+  - Trifold_Curve_Handle (from Oven)
+  - Curve_Handle (from Oven)
+  - Cuboidal_Handle (from Dishwasher)
+  - Trifold_Handle (from Dishwasher)
+  - Trifold_Curve_Handle (from Dishwasher)
+  - Curve_Handle (from Dishwasher)
+  - Cuboidal_Tophandle (from KitchenPot)
+  - Trifold_Tophandle (from KitchenPot)
+  - Semi_Ring_Tophandle (from KitchenPot)
+  - Multilevel_Tophandle (from KitchenPot)
+  - Trifold_Sidehandle (from KitchenPot)
+  - L_Shaped_Sidehandle (from KitchenPot)
+  - Cuboidal_Sidehandle (from KitchenPot)
+  - Regular_handle (from Doorhandle)
+  - Knob_handle (from Doorhandle)
+  - TShaped_handle (from Doorhandle)
+  - Trifold_Handle (from Kettle)
+  - Curved_Handle (from Kettle)
+  - Ring_Handle (from Kettle)
+  - Cylindrical_Handle (from Kettle)
+  - Round_U_Handle (from Kettle)
+  - Flat_U_Handle (from Kettle)
+  - Trifold_Handle (from Bucket)
+  - Curved_Handle (from Bucket)
+  - Round_U_Handle (from Bucket)
+  - Flat_U_Handle (from Bucket)
+  - Cuboidal_Handle (from Window)
+  - Arched_Handle (from Window)
+  - LShaped_Handle (from Window)
+  - Trifold_Handle (from Mug)
+  - Curved_Handle (from Mug)
+  - Ring_Handle (from Scissors)
+  - Half_Ring_Handle (from Scissors)
+  - Double_Curved_Handle (from Scissors)
+  - Triple_Curved_Handle (from Scissors)
+  - Cuboidal_Ring_Handle (from Scissors)
+  - Cuboidal_Handle (from Scissors)
+  - Cuboidal_Handle (from Refrigerator)
+  - Trifold_Handle (from Refrigerator)
+  - Trifold_Curve_Handle (from Refrigerator)
+  - Curve_Handle (from Refrigerator)
+  - Regular_Body (from Shaver)
+  - Straight_Handle (from Pliers)
+  - Rear_Curved_Handle (from Pliers)
+  - Middle_Curved_Handle (from Pliers)
+  - Asymmetric_Straight_Handle (from Pliers)
+  - LShape_Handle (from Door)
+  - PiShape_Handle (from Door)
+  - Cylindrical_Handle (from Door)
+  - Spherical_Handle (from Door)
+  - Cuboidal_Handle (from Knife)
+  - T_Shaped_Handle (from Knife)
+  - Cylindrical_Handle (from Knife)
+  - Curved_Handle (from Knife)
+  - Multideck_Handle (from Knife)
+  - Enveloping_Handle (from Knife)
+
+Hinge: 1 classes
+  - Standard_Hinge (from Door)
+
+Hook: 1 classes
+  - Regular_hook (from Foldingrack)
+
+Jaw: 2 classes
+  - Regular_jaw (from Clip)
+  - Curved_jaw (from Clip)
+
+Knob: 1 classes
+  - Standard_Knob (from Switch)
+
+Layer: 2 classes
+  - Regular_sublayer (from Table)
+  - Cylindrical_sublayer (from Table)
+
+Leg: 21 classes
+  - Cuboidal_Leg (from Safe)
+  - Cuboidal_Leg (from Box)
+  - Multilevel_Leg (from Oven)
+  - Regular_leg (from Chair)
+  - C_shaped_office_leg (from Chair)
+  - Star_leg (from Chair)
+  - Regular_leg_with_splat (from Chair)
+  - Barstool_leg (from Chair)
+  - Single_Leg (from Dishwasher)
+  - Multilevel_Leg (from Dishwasher)
+  - Enclosed_leg (from StorageFurniture)
+  - Regular_leg (from Table)
+  - Regular_with_splat_leg (from Table)
+  - Cable_stayed_leg (from Table)
+  - Star_leg (from Table)
+  - Bar_cylindrical_leg (from Table)
+  - Bar_cuboid_leg (from Table)
+  - Desk_type_leg (from Table)
+  - Regular_Leg (from Eyeglasses)
+  - Trifold_Leg (from Eyeglasses)
+  - Multilevel_Leg (from Refrigerator)
+
+Lever: 1 classes
+  - Regular_lever (from Clip)
+
+Lid: 1 classes
+  - Cylindrical_Lid (from Bottle)
+
+Magazine: 2 classes
+  - Carved_Magazine (from Stapler)
+  - Complex_Magazine (from Stapler)
+
+Nozzle: 6 classes
+  - Press_Nozzle (from Dispenser)
+  - Spray_Nozzle (from Dispenser)
+  - Regular_nozzle (from Shampoo)
+  - Cuboidal_Nozzle (from Lighter)
+  - Cambered_Nozzle (from Lighter)
+  - Enveloping_Nozzle (from Lighter)
+
+Panel: 1 classes
+  - Regular_front_panel (from StorageFurniture)
+
+Plug: 3 classes
+  - Cuboidal_Plug (from Switch)
+  - Standard_Plug (from Switch)
+  - Cylindrical_Plug (from Switch)
+
+Rack: 2 classes
+  - Regular_rack (from Foldingrack)
+  - Curved_rack (from Foldingrack)
+
+Refill: 1 classes
+  - Cylindrical_Refill (from Pen)
+
+Ruler: 2 classes
+  - Symmetrical_body (from Ruler)
+  - Asymmetrical_body (from Ruler)
+
+Screen: 3 classes
+  - Frustum_Screen (from Display)
+  - Standard_Screen (from Display)
+  - Regular_Screen (from Laptop)
+
+Seat: 2 classes
+  - Regular_seat (from Chair)
+  - Round_seat (from Chair)
+
+Shaft: 6 classes
+  - Regular_shaft (from Ruler)
+  - Cuboidal_Shaft (from Scissors)
+  - Double_Cuboidal_Shaft (from Scissors)
+  - Cylindrical_Shaft (from Scissors)
+  - Round_Shaft (from Pliers)
+  - Rectangular_Shaft (from Pliers)
+
+Shell: 2 classes
+  - Cylindrical_Shell (from Trashcan)
+  - Cuboidal_Shell (from Trashcan)
+
+Sphere: 1 classes
+  - Standard_Sphere (from Globe)
+
+Spout: 8 classes
+  - Straight_Spout (from Kettle)
+  - Curved_Spout (from Kettle)
+  - Trifold_Spout (from Faucet)
+  - ShowerRose_Spout (from Faucet)
+  - Quadfold_Spout (from Faucet)
+  - Curved_Spout (from Faucet)
+  - Cuboidal_Spout (from Faucet)
+  - Cylindrical_Spout (from Faucet)
+
+Support: 5 classes
+  - Standard_Support (from Eyeglasses)
+  - CuboidalRear_Support (from Display)
+  - Cuboidal_Support (from Display)
+  - Trifold_Support (from Display)
+  - TShaped_Support (from Display)
+
+Switch: 17 classes
+  - Round_Switch (from Switch)
+  - FlipX_Switch (from Switch)
+  - FlipY_Switch (from Switch)
+  - Lever_Switch (from Switch)
+  - SimplifiedZ_Switch (from Faucet)
+  - Knob_Switch (from Faucet)
+  - HandleY_Switch (from Faucet)
+  - HandleZ_Switch (from Faucet)
+  - RegularY_Switch (from Faucet)
+  - RegularX_Switch (from Faucet)
+  - RegularZ_Switch (from Faucet)
+  - TShaped_Switch (from Faucet)
+  - Lever_Switch (from Faucet)
+  - Cuboidal_Switch (from Faucet)
+  - RotaryX_Switch (from Faucet)
+  - RotaryY_Switch (from Faucet)
+  - RotaryZ_Switch (from Faucet)
+
+Tray: 7 classes
+  - Cylindrical_Tray (from Microwave)
+  - Flat_Tray (from Oven)
+  - Drawer_Like_Tray (from Oven)
+  - Flat_Tray (from Dishwasher)
+  - Drawer_Like_Tray (from Dishwasher)
+  - Flat_Tray (from Refrigerator)
+  - Drawer_Like_Tray (from Refrigerator)
+
+Vessel: 1 classes
+  - Cuboidal_Vessel (from Refrigerator)
+
+Wheel: 3 classes
+  - Simplified_Wheel (from Lighter)
+  - Standard_Wheel (from Lighter)
+  - Standard_Wheel (from Trashcan)
+
+Wick: 1 classes
+  - Standard_Wick (from Lighter)
+
+Window: 3 classes
+  - Symmetrical_Window (from Window)
+  - Asymmetrical_Window (from Window)
+  - VerticalSlid_Window (from Window)
+

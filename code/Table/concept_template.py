@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, get_rodrigues_matrix
@@ -149,11 +151,11 @@ class Regular_leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_legs[0]):
+        for i in range(int(number_of_legs[0])):
             if number_of_legs[0] == 1:
                 mesh_rotation = [front_rotation[0], central_rotation[0], 0]
                 mesh_position = [0, -front_legs_size[1] * np.cos(front_rotation[0]) / 2, 0]
-                self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0],
+                tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0],
                                    self.front_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation)
 
@@ -213,9 +215,9 @@ class Regular_leg(ConceptTemplate):
                 self.mesh = Cuboid(size[1], size[0], size[2],
                                    position=mesh_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_legs):
             mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],
@@ -226,13 +228,13 @@ class Regular_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -293,7 +295,7 @@ class Regular_with_splat_leg(ConceptTemplate):
                     -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                     -position_sign * legs_separation[0] / 2 * np.sin(central_rotation[0]) + legs_separation[
                         2] / 2 * np.cos(central_rotation[0])]
-                self.mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
+                tmp_mesh = Cuboid(self.front_legs_size[1], self.front_legs_size[0], self.front_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation)
             else:
                 mesh_rotation = [rear_rotation[0], central_rotation[0], rotation_sign * rear_rotation[1]]
@@ -303,12 +305,12 @@ class Regular_with_splat_leg(ConceptTemplate):
                     -front_legs_size[1] / 2 * np.cos(front_rotation[0]) * np.cos(front_rotation[1]),
                     -position_sign * legs_separation[1] / 2 * np.sin(central_rotation[0]) - legs_separation[
                         2] / 2 * np.cos(central_rotation[0])]
-                self.mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
+                tmp_mesh = Cuboid(self.rear_legs_size[1], self.rear_legs_size[0], self.rear_legs_size[2],
                                    position=mesh_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         if bridging_bars_existance[0] == 1:
             mesh_rotation = [front_rotation[0], central_rotation[0], 0]
@@ -437,13 +439,13 @@ class Regular_with_splat_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -496,7 +498,7 @@ class Cable_stayed_leg(ConceptTemplate):
 
         if self.number_of_legs[0] == 4:
             front_position, rear_position = None, None
-            for i in range(number_of_legs[0]):
+            for i in range(int(number_of_legs[0])):
                 rotation_sign = 1 if (i == 0) else -1
                 position_sign = 1 if (i % 2 == 1) else -1
                 if i < 2:
@@ -521,11 +523,11 @@ class Cable_stayed_leg(ConceptTemplate):
                     if i == 3:
                         rear_position = mesh_position
                     size = rear_legs_size
-                self.mesh = Cuboid(size[1], size[0], size[2],
+                tmp_mesh = Cuboid(size[1], size[0], size[2],
                                    position=mesh_position, rotation=mesh_rotation)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
             
             for i in range(2):
                 rot_mult = 1 if i == 0 else -1
@@ -534,11 +536,11 @@ class Cable_stayed_leg(ConceptTemplate):
                 rotation_angle = np.arctan2(direction_vector[1], direction_vector[0])
                 mesh_rotation = [0, central_rotation[0] + rot_mult * rotation_angle, 0]
                 mesh_position = [0, -connections_size[1] / 2, 0]
-                self.mesh = Cuboid(connections_size[0], length, connections_size[1],
+                tmp_mesh = Cuboid(connections_size[0], length, connections_size[1],
                                    position=mesh_position, rotation=mesh_rotation)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_legs):
             mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],
@@ -549,13 +551,13 @@ class Cable_stayed_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -599,11 +601,11 @@ class Star_leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(1 + number_of_sub_legs[0]):
+        for i in range(1 + int(number_of_sub_legs[0])):
             if i == 0:
                 mesh_rotation = [horizontal_rotation[0], central_rotation[0], 0]
                 mesh_position = [0, -vertical_size[1] / 2 * np.cos(horizontal_rotation[0]), 0]
-                self.mesh = Cylinder(vertical_size[1], vertical_size[0], position=mesh_position,
+                tmp_mesh = Cylinder(vertical_size[1], vertical_size[0], position=mesh_position,
                                      rotation=mesh_rotation)
             else:
                 sub_rotation = np.pi / number_of_sub_legs[0] * (i - 1) * 2
@@ -622,12 +624,12 @@ class Star_leg(ConceptTemplate):
                         central_rotation[0])) * np.cos(horizontal_rotation[0]) + (
                             -vertical_size[1] + sub_size[1] / 2 + sub_central_offset[0]) * np.sin(
                         horizontal_rotation[0]) + vertical_size[1] / 2 * np.sin(horizontal_rotation[0])]
-                self.mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2], position=mesh_position,
+                tmp_mesh = Cuboid(sub_size[1], sub_size[0], sub_size[2], position=mesh_position,
                                    rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_legs):
             mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],
@@ -638,13 +640,13 @@ class Star_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -707,13 +709,13 @@ class Bar_cylindrical_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -780,13 +782,13 @@ class Bar_cuboid_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -832,7 +834,7 @@ class Desk_type_leg(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(4 + number_of_connections[0]):
+        for i in range(4 + int(number_of_connections[0])):
             rotation_sign = 1 if i == 0 else -1
             position_sign = -1 if (i % 2 == 0) else 1
             pose = apply_transformation([0, -vertical_size[1] / 2, 0], [0, 0, 0],
@@ -840,13 +842,13 @@ class Desk_type_leg(ConceptTemplate):
             if i < 2:
                 mesh_rotation = [vertical_rotation[0], 0, rotation_sign * vertical_rotation[1]]
                 mesh_position = [position_sign * vertical_separation[0] / 2, pose[1], 0]
-                self.mesh = Cuboid(vertical_size[1], vertical_size[0], vertical_size[2],
+                tmp_mesh = Cuboid(vertical_size[1], vertical_size[0], vertical_size[2],
                                    position=mesh_position, rotation=mesh_rotation)
             elif i < 4:
                 mesh_rotation = [horizontal_rotation[0], 0, 0]
                 mesh_position = [position_sign * (vertical_separation[0] / 2 - pose[0]), 2 * pose[1],
                                  -vertical_size[1] / 2 * np.sin(vertical_rotation[0])]
-                self.mesh = Cuboid(horizontal_size[1], horizontal_size[0], horizontal_size[2], position=mesh_position,
+                tmp_mesh = Cuboid(horizontal_size[1], horizontal_size[0], horizontal_size[2], position=mesh_position,
                                    rotation=mesh_rotation)
             else:
 
@@ -864,9 +866,9 @@ class Desk_type_leg(ConceptTemplate):
                                    connections_size[1],
                                    position=mesh_position, rotation=mesh_rotation)
 
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_legs):
             mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],
@@ -877,13 +879,13 @@ class Desk_type_leg(ConceptTemplate):
             mesh_rotation = [self.additional_legs_attributes[9 * i + 6],
                              self.additional_legs_attributes[9 * i + 7],
                              self.additional_legs_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_legs_attributes[9 * i + 1],
                                           self.additional_legs_attributes[9 * i],
                                           self.additional_legs_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -920,14 +922,14 @@ class Regular_sublayer(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_subs[0]):
+        for i in range(int(number_of_subs[0])):
             mesh_rotation = [0, 0, 0]
             mesh_position = [0, subs_offset[0] + i * interval_between_subs[0], 0]
-            self.mesh = Cuboid(subs_size[1], subs_size[0], subs_size[2],
+            tmp_mesh = Cuboid(subs_size[1], subs_size[0], subs_size[2],
                                position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_sublayers):
             mesh_position = [self.additional_sublayers_attributes[9 * i + 3] - position[0],
@@ -936,13 +938,13 @@ class Regular_sublayer(ConceptTemplate):
             mesh_rotation = [self.additional_sublayers_attributes[9 * i + 6],
                              self.additional_sublayers_attributes[9 * i + 7],
                              self.additional_sublayers_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_sublayers_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_sublayers_attributes[9 * i + 1],
                                           self.additional_sublayers_attributes[9 * i],
                                           self.additional_sublayers_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -979,14 +981,14 @@ class Cylindrical_sublayer(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(number_of_subs[0]):
+        for i in range(int(number_of_subs[0])):
             mesh_rotation = [0, 0, 0]
             mesh_position = [0, subs_offset[0] + i * interval_between_subs[0], 0]
-            self.mesh = Cylinder(subs_size[1], subs_size[0],
+            tmp_mesh = Cylinder(subs_size[1], subs_size[0],
                                  position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         for i in range(self.number_of_additional_sublayers):
             mesh_position = [self.additional_sublayers_attributes[9 * i + 3],
@@ -995,13 +997,13 @@ class Cylindrical_sublayer(ConceptTemplate):
             mesh_rotation = [self.additional_sublayers_attributes[9 * i + 6],
                              self.additional_sublayers_attributes[9 * i + 7],
                              self.additional_sublayers_attributes[9 * i + 8]]
-            self.additional_mesh = Cuboid(self.additional_sublayers_attributes[9 * i + 1],
+            tmp_additional_mesh = Cuboid(self.additional_sublayers_attributes[9 * i + 1],
                                           self.additional_sublayers_attributes[9 * i],
                                           self.additional_sublayers_attributes[9 * i + 2],
                                           position=mesh_position, rotation=mesh_rotation)
-            vertices_list.append(self.additional_mesh.vertices)
-            faces_list.append(self.additional_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.additional_mesh.vertices)
+            vertices_list.append(tmp_additional_mesh.vertices)
+            faces_list.append(tmp_additional_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_additional_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -1059,26 +1061,26 @@ class Regular_drawer(ConceptTemplate):
 
         # Record Parameters
         self.number_of_drawer = number_of_drawer
-        self.drawer_size = [drawers_params[i * 21: i * 21 + 3] for i in range(number_of_drawer[0])]
-        self.bottom_size = [drawers_params[i * 21 + 3] for i in range(number_of_drawer[0])]
-        self.front_size = [drawers_params[i * 21 + 4: i * 21 + 7] for i in range(number_of_drawer[0])]
-        self.front_offset = [drawers_params[i * 21 + 7] for i in range(number_of_drawer[0])]
-        self.left_right_inner_size = [drawers_params[i * 21 + 8] for i in range(number_of_drawer[0])]
-        self.rear_front_inner_size = [drawers_params[i * 21 + 9] for i in range(number_of_drawer[0])]
-        self.number_of_handle = [drawers_params[i * 21 + 10] for i in range(number_of_drawer[0])]
-        self.handle_sizes = [drawers_params[i * 21 + 11: i * 21 + 14] for i in range(number_of_drawer[0])]
-        self.handle_rotation = [drawers_params[i * 21 + 14] for i in range(number_of_drawer[0])]
-        self.handle_offset = [drawers_params[i * 21 + 15: i * 21 + 17] for i in range(number_of_drawer[0])]
-        self.handle_separation = [drawers_params[i * 21 + 17] for i in range(number_of_drawer[0])]
-        self.drawer_offset = [drawers_params[i * 21 + 18: i * 21 + 21] for i in range(number_of_drawer[0])]
+        self.drawer_size = [drawers_params[i * 21: i * 21 + 3] for i in range(int(number_of_drawer[0]))]
+        self.bottom_size = [drawers_params[i * 21 + 3] for i in range(int(number_of_drawer[0]))]
+        self.front_size = [drawers_params[i * 21 + 4: i * 21 + 7] for i in range(int(number_of_drawer[0]))]
+        self.front_offset = [drawers_params[i * 21 + 7] for i in range(int(number_of_drawer[0]))]
+        self.left_right_inner_size = [drawers_params[i * 21 + 8] for i in range(int(number_of_drawer[0]))]
+        self.rear_front_inner_size = [drawers_params[i * 21 + 9] for i in range(int(number_of_drawer[0]))]
+        self.number_of_handle = [drawers_params[i * 21 + 10] for i in range(int(number_of_drawer[0]))]
+        self.handle_sizes = [drawers_params[i * 21 + 11: i * 21 + 14] for i in range(int(number_of_drawer[0]))]
+        self.handle_rotation = [drawers_params[i * 21 + 14] for i in range(int(number_of_drawer[0]))]
+        self.handle_offset = [drawers_params[i * 21 + 15: i * 21 + 17] for i in range(int(number_of_drawer[0]))]
+        self.handle_separation = [drawers_params[i * 21 + 17] for i in range(int(number_of_drawer[0]))]
+        self.drawer_offset = [drawers_params[i * 21 + 18: i * 21 + 21] for i in range(int(number_of_drawer[0]))]
 
         # Instantiate component geometries
         vertices_list = []
         faces_list = []
         total_num_vertices = 0
 
-        for drawer_idx in range(number_of_drawer[0]):
-            for mesh_idx in range(6 + self.number_of_handle[drawer_idx]):
+        for drawer_idx in range(int(number_of_drawer[0])):
+            for mesh_idx in range(int(6 + self.number_of_handle[drawer_idx])):
                 if mesh_idx < 2:
                     position_sign = -1 if mesh_idx == 0 else 1
                     mesh_position = [position_sign * (
@@ -1086,7 +1088,7 @@ class Regular_drawer(ConceptTemplate):
                                      self.drawer_offset[drawer_idx][0],
                                      -self.drawer_size[drawer_idx][1] / 2 + self.drawer_offset[drawer_idx][1],
                                      self.drawer_offset[drawer_idx][2]]
-                    self.mesh = Cuboid(self.drawer_size[drawer_idx][1],
+                    tmp_mesh = Cuboid(self.drawer_size[drawer_idx][1],
                                        self.left_right_inner_size[drawer_idx],
                                        self.drawer_size[drawer_idx][2],
                                        position=mesh_position)
@@ -1096,7 +1098,7 @@ class Regular_drawer(ConceptTemplate):
                                      -self.drawer_size[drawer_idx][1] / 2 + self.drawer_offset[drawer_idx][1],
                                      position_sign * (
                                              self.drawer_size[drawer_idx][2] - self.rear_front_inner_size[drawer_idx]) / 2 + self.drawer_offset[drawer_idx][2]]
-                    self.mesh = Cuboid(self.drawer_size[drawer_idx][1],
+                    tmp_mesh = Cuboid(self.drawer_size[drawer_idx][1],
                                        self.drawer_size[drawer_idx][0] - 2 * self.left_right_inner_size[drawer_idx],
                                        self.rear_front_inner_size[drawer_idx],
                                        position=mesh_position)
@@ -1104,7 +1106,7 @@ class Regular_drawer(ConceptTemplate):
                     mesh_position = [self.drawer_offset[drawer_idx][0],
                                      -self.drawer_size[drawer_idx][1] + self.drawer_offset[drawer_idx][1] - self.bottom_size[drawer_idx] / 2,
                                      self.drawer_offset[drawer_idx][2]]
-                    self.mesh = Cuboid(self.bottom_size[drawer_idx],
+                    tmp_mesh = Cuboid(self.bottom_size[drawer_idx],
                                        self.drawer_size[drawer_idx][0],
                                        self.drawer_size[drawer_idx][2],
                                        position=mesh_position)
@@ -1114,7 +1116,7 @@ class Regular_drawer(ConceptTemplate):
                                      self.front_offset[drawer_idx],
                                      self.drawer_offset[drawer_idx][2] + self.drawer_size[drawer_idx][2] / 2 +
                                      self.front_size[drawer_idx][2] / 2]
-                    self.mesh = Cuboid(self.front_size[drawer_idx][1],
+                    tmp_mesh = Cuboid(self.front_size[drawer_idx][1],
                                        self.front_size[drawer_idx][0],
                                        self.front_size[drawer_idx][2],
                                        position=mesh_position)
@@ -1130,11 +1132,11 @@ class Regular_drawer(ConceptTemplate):
                                      self.handle_offset[drawer_idx][0],
                                      self.drawer_offset[drawer_idx][2] + self.drawer_size[drawer_idx][2] / 2 +
                                      self.front_size[drawer_idx][2] + self.front_size[drawer_idx][2] / 2]
-                    self.mesh = Cuboid(self.handle_sizes[drawer_idx][1], self.handle_sizes[drawer_idx][0], self.handle_sizes[drawer_idx][2],
+                    tmp_mesh = Cuboid(self.handle_sizes[drawer_idx][1], self.handle_sizes[drawer_idx][0], self.handle_sizes[drawer_idx][2],
                                        position=mesh_position, rotation=mesh_rotation)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -1158,26 +1160,26 @@ class Regular_door(ConceptTemplate):
 
         # Record Parameters
         self.number_of_door = number_of_door
-        self.door_size = [doors_params[i * 13: i * 13 + 3] for i in range(number_of_door[0])]
-        self.handle_size = [doors_params[i * 13 + 3: i * 13 + 6] for i in range(number_of_door[0])]
-        self.handle_rotation = [doors_params[i * 13 + 6] for i in range(number_of_door[0])]
-        self.handle_offset = [doors_params[i * 13 + 7: i * 13 + 9] for i in range(number_of_door[0])]
-        self.door_rotation = [doors_params[i * 13 + 9] for i in range(number_of_door[0])]
-        self.door_offset = [doors_params[i * 13 + 10: i * 13 + 13] for i in range(number_of_door[0])]
+        self.door_size = [doors_params[i * 13: i * 13 + 3] for i in range(int(number_of_door[0]))]
+        self.handle_size = [doors_params[i * 13 + 3: i * 13 + 6] for i in range(int(number_of_door[0]))]
+        self.handle_rotation = [doors_params[i * 13 + 6] for i in range(int(number_of_door[0]))]
+        self.handle_offset = [doors_params[i * 13 + 7: i * 13 + 9] for i in range(int(number_of_door[0]))]
+        self.door_rotation = [doors_params[i * 13 + 9] for i in range(int(number_of_door[0]))]
+        self.door_offset = [doors_params[i * 13 + 10: i * 13 + 13] for i in range(int(number_of_door[0]))]
 
         # Instantiate component geometries
         vertices_list = []
         faces_list = []
         total_num_vertices = 0
 
-        for door_idx in range(self.number_of_door[0]):
+        for door_idx in range(int(self.number_of_door[0])):
             for mesh_idx in range(2):
                 if mesh_idx == 0:
                     mesh_rotation = [0, self.door_rotation[door_idx], 0]
                     mesh_position = [self.door_offset[door_idx][0],
                                      self.door_offset[door_idx][1] - self.door_size[door_idx][1] / 2,
                                      self.door_offset[door_idx][2]]
-                    self.mesh = Cuboid(self.door_size[door_idx][1], self.door_size[door_idx][0], self.door_size[door_idx][2],
+                    tmp_mesh = Cuboid(self.door_size[door_idx][1], self.door_size[door_idx][0], self.door_size[door_idx][2],
                                        position=mesh_position, rotation=mesh_rotation)
                 else:
                     mesh_rotation = [0, self.door_rotation[door_idx], self.handle_rotation[door_idx]]
@@ -1187,11 +1189,11 @@ class Regular_door(ConceptTemplate):
                         self.door_offset[door_idx][1] - self.door_size[door_idx][1] / 2 + self.handle_offset[door_idx][1],
                         self.door_offset[door_idx][2] - self.handle_offset[door_idx][0] * np.sin(self.door_rotation[door_idx]) + self.handle_size[door_idx][2] / 2 * np.cos(
                             self.door_rotation[door_idx])]
-                    self.mesh = Cuboid(self.handle_size[door_idx][1], self.handle_size[door_idx][0], self.handle_size[door_idx][2],
+                    tmp_mesh = Cuboid(self.handle_size[door_idx][1], self.handle_size[door_idx][0], self.handle_size[door_idx][2],
                                        position=mesh_position, rotation=mesh_rotation)
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -1367,7 +1369,7 @@ class Regular_cabinet(ConceptTemplate):
             total_mesh_list = [cabinet_body_mesh, layers_mesh, cabinet_doors_mesh, cabinet_drawers_mesh]
 
             # build cabinet body and layers
-            for mesh_idx in range(sum(total_mesh_list[:2])):
+            for mesh_idx in range(int(sum(total_mesh_list[:2]))):
                 if mesh_idx < sum(total_mesh_list[:1]):
                     position_sign = -1 if mesh_idx % 2 == 0 else 1
                     if mesh_idx < 2:
@@ -1375,14 +1377,14 @@ class Regular_cabinet(ConceptTemplate):
                             position_sign * (self.cabinet_size[cabinet_idx][0] - self.cab_left_right_inner_sizes[cabinet_idx]) / 2 + self.cabinet_offset[cabinet_idx][0],
                             self.cabinet_offset[cabinet_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                             self.cabinet_offset[cabinet_idx][2]]
-                        self.mesh = Cuboid(self.cabinet_size[cabinet_idx][1], self.cab_left_right_inner_sizes[cabinet_idx], self.cabinet_size[cabinet_idx][2],
+                        tmp_mesh = Cuboid(self.cabinet_size[cabinet_idx][1], self.cab_left_right_inner_sizes[cabinet_idx], self.cabinet_size[cabinet_idx][2],
                                            position=mesh_position)
                     elif mesh_idx < 4:
                         mesh_position = [
                             self.cabinet_offset[cabinet_idx][0],
                             position_sign * (self.cabinet_size[cabinet_idx][1] - self.cab_up_down_inner_sizes[cabinet_idx]) / 2 + self.cabinet_offset[cabinet_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                             self.cabinet_offset[cabinet_idx][2]]
-                        self.mesh = Cuboid(self.cab_up_down_inner_sizes[cabinet_idx],
+                        tmp_mesh = Cuboid(self.cab_up_down_inner_sizes[cabinet_idx],
                                            self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[cabinet_idx],
                                            self.cabinet_size[cabinet_idx][2],
                                            position=mesh_position)
@@ -1391,7 +1393,7 @@ class Regular_cabinet(ConceptTemplate):
                             self.cabinet_offset[cabinet_idx][0],
                             self.cabinet_offset[cabinet_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                             self.cabinet_offset[cabinet_idx][2] - (self.cabinet_size[cabinet_idx][2] + self.cab_backs_size[cabinet_idx]) / 2]
-                        self.mesh = Cuboid(self.cabinet_size[cabinet_idx][1],
+                        tmp_mesh = Cuboid(self.cabinet_size[cabinet_idx][1],
                                            self.cabinet_size[cabinet_idx][0],
                                            self.cab_backs_size[cabinet_idx],
                                            position=mesh_position)
@@ -1400,7 +1402,7 @@ class Regular_cabinet(ConceptTemplate):
                         self.cabinet_offset[cabinet_idx][0],
                         - (self.layers_offset[cabinet_idx] + (mesh_idx - sum(total_mesh_list[:1])) * self.interval_between_layers[cabinet_idx]) - self.cabinet_size[cabinet_idx][1] / 2,
                         self.cabinet_offset[cabinet_idx][2]]
-                    self.mesh = Cuboid(self.layers_sizes[cabinet_idx],
+                    tmp_mesh = Cuboid(self.layers_sizes[cabinet_idx],
                                        self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[cabinet_idx],
                                        self.cabinet_size[cabinet_idx][2],
                                        position=mesh_position)
@@ -1408,7 +1410,7 @@ class Regular_cabinet(ConceptTemplate):
                 # special case for top and beneath cabinet to adjust the position of the cabinet 
 
                 # Y-axis adjustment
-                self.mesh.vertices[:, 1] += self.cabinet_size[cabinet_idx][1] / 2
+                tmp_mesh.vertices[:, 1] += self.cabinet_size[cabinet_idx][1] / 2
 
                 # X-axis adjustment
                 if self.number_of_top_cabinet == 2:
@@ -1417,12 +1419,12 @@ class Regular_cabinet(ConceptTemplate):
                     else:
                         self.mesh.vertices[:, 0] -= self.cabinet_size[cabinet_idx][0] / 2
 
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
             # build doors and drawers
-            for space_idx in range(self.number_of_layers[cabinet_idx] + 1):
+            for space_idx in range(int(self.number_of_layers[cabinet_idx] + 1)):
                 if self.number_of_layers[cabinet_idx] == 0:
                     _height = self.cabinet_size[cabinet_idx][1] - 2 * self.cab_up_down_inner_sizes[cabinet_idx]
                     _pos = 0
@@ -1438,7 +1440,7 @@ class Regular_cabinet(ConceptTemplate):
                     _pos = self.cabinet_size[cabinet_idx][1] - self.layers_offset[actual_idx] - (2 * space_idx - 1) / 2 * self.interval_between_layers[0]
 
                 if self.type_of_spaces[cabinet_idx][space_idx] == 1:
-                    for mesh_idx in range(5 + self.drawer_number_of_handles[cabinet_idx][space_idx]):
+                    for mesh_idx in range(int(5 + self.drawer_number_of_handles[cabinet_idx][space_idx])):
                         if mesh_idx < 2:
                             position_sign = -1 if mesh_idx == 0 else 1
                             mesh_position = [position_sign * (
@@ -1446,7 +1448,7 @@ class Regular_cabinet(ConceptTemplate):
                                              self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                                              self.cabinet_offset[cabinet_idx][2] + self.drawer_offset[cabinet_idx][space_idx] + self.drawer_interval[cabinet_idx][space_idx] / 2]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.drawer_inner_sizes[0],
                                                self.cabinet_size[cabinet_idx][2] - self.drawer_interval[cabinet_idx][space_idx],
                                                position=mesh_position)
@@ -1455,7 +1457,7 @@ class Regular_cabinet(ConceptTemplate):
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                                              self.cabinet_offset[cabinet_idx][2] + position_sign * (self.cabinet_size[cabinet_idx][2] - self.drawer_inner_sizes[1]) / 2]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[cabinet_idx] - 2 * self.drawer_inner_sizes[0],
                                                self.drawer_inner_sizes[1],
                                                position=mesh_position)
@@ -1463,7 +1465,7 @@ class Regular_cabinet(ConceptTemplate):
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1] - (_height + self.drawer_bottom_size[0]) / 2 - self.cabinet_size[cabinet_idx][1] / 2,
                                              self.cabinet_offset[cabinet_idx][2] + self.drawer_interval[cabinet_idx][space_idx] / 2 + self.drawer_offset[cabinet_idx][space_idx]]
-                            self.mesh = Cuboid(self.drawer_bottom_size[0],
+                            tmp_mesh = Cuboid(self.drawer_bottom_size[0],
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[cabinet_idx],
                                                self.cabinet_size[cabinet_idx][2] - self.drawer_interval[cabinet_idx][space_idx],
                                                position=mesh_position)
@@ -1478,13 +1480,13 @@ class Regular_cabinet(ConceptTemplate):
                                              _pos + self.cabinet_offset[cabinet_idx][1] + self.drawer_handles_offsets[cabinet_idx][space_idx][1] - self.cabinet_size[cabinet_idx][1] / 2,
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.drawer_handles_size[cabinet_idx][2]) / 2 +
                                              self.drawer_offset[cabinet_idx][space_idx]]
-                            self.mesh = Cuboid(self.drawer_handles_size[cabinet_idx][1], self.drawer_handles_size[cabinet_idx][0], self.drawer_handles_size[cabinet_idx][2],
+                            tmp_mesh = Cuboid(self.drawer_handles_size[cabinet_idx][1], self.drawer_handles_size[cabinet_idx][0], self.drawer_handles_size[cabinet_idx][2],
                                                position=mesh_position, rotation=mesh_rotation)
 
                         # special case for top and beneath cabinet to adjust the position of the cabinet 
 
                         # Y-axis adjustment
-                        self.mesh.vertices[:, 1] += self.cabinet_size[cabinet_idx][1] / 2
+                        tmp_mesh.vertices[:, 1] += self.cabinet_size[cabinet_idx][1] / 2
 
                         # X-axis adjustment
                         if self.number_of_top_cabinet == 2:
@@ -1493,16 +1495,16 @@ class Regular_cabinet(ConceptTemplate):
                             else:
                                 self.mesh.vertices[:, 0] -= self.cabinet_size[cabinet_idx][0] / 2
 
-                        vertices_list.append(self.mesh.vertices)
-                        faces_list.append(self.mesh.faces + total_num_vertices)
-                        total_num_vertices += len(self.mesh.vertices)
+                        vertices_list.append(tmp_mesh.vertices)
+                        faces_list.append(tmp_mesh.faces + total_num_vertices)
+                        total_num_vertices += len(tmp_mesh.vertices)
                 elif self.type_of_spaces[cabinet_idx][space_idx] == 2:
                     for mesh_idx in range(2):
                         if mesh_idx == 0:
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.door_sizes[0]) / 2]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[cabinet_idx],
                                                self.door_sizes[0],
                                                position=mesh_position)
@@ -1512,7 +1514,7 @@ class Regular_cabinet(ConceptTemplate):
                                              _pos + self.cabinet_offset[cabinet_idx][1] + self.door_handles_offsets[cabinet_idx][space_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.door_sizes[0]) / 2 + (
                                                      self.door_handles_size[cabinet_idx][2] + self.door_sizes[0]) / 2]
-                            self.mesh = Cuboid(self.door_handles_size[1], self.door_handles_size[0], self.door_handles_size[2],
+                            tmp_mesh = Cuboid(self.door_handles_size[1], self.door_handles_size[0], self.door_handles_size[2],
                                                position=mesh_position, rotation=mesh_rotation)
                     # special case for top and beneath cabinet to adjust the position of the cabinet 
 
@@ -1542,7 +1544,7 @@ class Regular_cabinet(ConceptTemplate):
             total_mesh_list = [cabinet_body_mesh, layers_mesh, cabinet_doors_mesh, cabinet_drawers_mesh]
 
             # build cabinet body and layers
-            for mesh_idx in range(sum(total_mesh_list[:2])):
+            for mesh_idx in range(int(sum(total_mesh_list[:2]))):
                 if mesh_idx < sum(total_mesh_list[:1]):
                     position_sign = -1 if mesh_idx % 2 == 0 else 1
                     if mesh_idx < 2:
@@ -1550,14 +1552,14 @@ class Regular_cabinet(ConceptTemplate):
                             position_sign * (self.cabinet_size[cabinet_idx][0] - self.cab_left_right_inner_sizes[actual_idx]) / 2 + self.cabinet_offset[cabinet_idx][0],
                             self.cabinet_offset[cabinet_idx][1],
                             self.cabinet_offset[cabinet_idx][2]]
-                        self.mesh = Cuboid(self.cabinet_size[cabinet_idx][1], self.cab_left_right_inner_sizes[actual_idx], self.cabinet_size[cabinet_idx][2],
+                        tmp_mesh = Cuboid(self.cabinet_size[cabinet_idx][1], self.cab_left_right_inner_sizes[actual_idx], self.cabinet_size[cabinet_idx][2],
                                            position=mesh_position)
                     elif mesh_idx < 4:
                         mesh_position = [
                             self.cabinet_offset[cabinet_idx][0],
                             position_sign * (self.cabinet_size[cabinet_idx][1] - self.cab_up_down_inner_sizes[actual_idx]) / 2 + self.cabinet_offset[cabinet_idx][1],
                             self.cabinet_offset[cabinet_idx][2]]
-                        self.mesh = Cuboid(self.cab_up_down_inner_sizes[actual_idx],
+                        tmp_mesh = Cuboid(self.cab_up_down_inner_sizes[actual_idx],
                                            self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[actual_idx],
                                            self.cabinet_size[cabinet_idx][2],
                                            position=mesh_position)
@@ -1567,7 +1569,7 @@ class Regular_cabinet(ConceptTemplate):
                                 self.cabinet_offset[cabinet_idx][0],
                                 self.cabinet_offset[cabinet_idx][1],
                                 self.cabinet_offset[cabinet_idx][2] - (self.cabinet_size[cabinet_idx][2] + self.cab_backs_size[actual_idx]) / 2]
-                            self.mesh = Cuboid(self.cabinet_size[cabinet_idx][1],
+                            tmp_mesh = Cuboid(self.cabinet_size[cabinet_idx][1],
                                                self.cabinet_size[cabinet_idx][0],
                                                self.cab_backs_size[actual_idx],
                                                position=mesh_position)
@@ -1579,17 +1581,17 @@ class Regular_cabinet(ConceptTemplate):
                         self.cabinet_offset[cabinet_idx][1] + self.cabinet_size[cabinet_idx][1] / 2 - (
                                 self.layers_offset[actual_idx] + (mesh_idx - sum(total_mesh_list[:1])) * self.interval_between_layers[actual_idx]),
                         self.cabinet_offset[cabinet_idx][2]]
-                    self.mesh = Cuboid(self.layers_sizes[actual_idx],
+                    tmp_mesh = Cuboid(self.layers_sizes[actual_idx],
                                        self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[actual_idx],
                                        self.cabinet_size[cabinet_idx][2],
                                        position=mesh_position)
 
-                vertices_list.append(self.mesh.vertices)
-                faces_list.append(self.mesh.faces + total_num_vertices)
-                total_num_vertices += len(self.mesh.vertices)
+                vertices_list.append(tmp_mesh.vertices)
+                faces_list.append(tmp_mesh.faces + total_num_vertices)
+                total_num_vertices += len(tmp_mesh.vertices)
 
             # build doors and drawers
-            for space_idx in range(self.number_of_layers[actual_idx] + 1):
+            for space_idx in range(int(self.number_of_layers[actual_idx] + 1)):
                 if self.number_of_layers[actual_idx] == 0:
                     _height = self.cabinet_size[cabinet_idx][1] - 2 * self.cab_up_down_inner_sizes[actual_idx]
                     _pos = self.cabinet_size[cabinet_idx][1] / 2
@@ -1605,7 +1607,7 @@ class Regular_cabinet(ConceptTemplate):
                     _pos = self.cabinet_size[cabinet_idx][1] - self.layers_offset[actual_idx] - (2 * space_idx - 1) / 2 * self.interval_between_layers[0]
 
                 if self.type_of_spaces[cabinet_idx][space_idx] == 1:
-                    for mesh_idx in range(5 + self.drawer_number_of_handles[cabinet_idx][space_idx]):
+                    for mesh_idx in range(int(5 + self.drawer_number_of_handles[cabinet_idx][space_idx])):
                         if mesh_idx < 2:
                             position_sign = -1 if mesh_idx == 0 else 1
                             mesh_position = [position_sign * (
@@ -1613,7 +1615,7 @@ class Regular_cabinet(ConceptTemplate):
                                              self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + self.drawer_offset[cabinet_idx][space_idx] + self.drawer_interval[cabinet_idx][space_idx] / 2]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.drawer_inner_sizes[0],
                                                self.cabinet_size[cabinet_idx][2] - self.drawer_interval[cabinet_idx][space_idx],
                                                position=mesh_position)
@@ -1622,7 +1624,7 @@ class Regular_cabinet(ConceptTemplate):
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + position_sign * (self.cabinet_size[cabinet_idx][2] - self.drawer_inner_sizes[1]) / 2 + self.drawer_offset[cabinet_idx][space_idx]]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[actual_idx] - 2 * self.drawer_inner_sizes[0],
                                                self.drawer_inner_sizes[1],
                                                position=mesh_position)
@@ -1630,7 +1632,7 @@ class Regular_cabinet(ConceptTemplate):
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1] - (_height + self.drawer_bottom_size[0]) / 2,
                                              self.cabinet_offset[cabinet_idx][2] + self.drawer_interval[cabinet_idx][space_idx] / 2 + self.drawer_offset[cabinet_idx][space_idx]]
-                            self.mesh = Cuboid(self.drawer_bottom_size[0],
+                            tmp_mesh = Cuboid(self.drawer_bottom_size[0],
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[actual_idx],
                                                self.cabinet_size[cabinet_idx][2] - self.drawer_interval[cabinet_idx][space_idx],
                                                position=mesh_position)
@@ -1645,24 +1647,24 @@ class Regular_cabinet(ConceptTemplate):
                                              _pos + self.cabinet_offset[cabinet_idx][1] + self.drawer_handles_offsets[cabinet_idx][space_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.drawer_handles_size[cabinet_idx][2]) / 2 +
                                              self.drawer_offset[cabinet_idx][space_idx]]
-                            self.mesh = Cuboid(self.drawer_handles_size[cabinet_idx][1], self.drawer_handles_size[cabinet_idx][0], self.drawer_handles_size[cabinet_idx][2],
+                            tmp_mesh = Cuboid(self.drawer_handles_size[cabinet_idx][1], self.drawer_handles_size[cabinet_idx][0], self.drawer_handles_size[cabinet_idx][2],
                                                position=mesh_position, rotation=mesh_rotation)
 
                         # special case for top and beneath cabinet to adjust the position of the cabinet 
 
                         # Y-axis adjustment
-                        self.mesh.vertices[:, 1] -= self.cabinet_size[cabinet_idx][1] / 2
+                        tmp_mesh.vertices[:, 1] -= self.cabinet_size[cabinet_idx][1] / 2
 
-                        vertices_list.append(self.mesh.vertices)
-                        faces_list.append(self.mesh.faces + total_num_vertices)
-                        total_num_vertices += len(self.mesh.vertices)
+                        vertices_list.append(tmp_mesh.vertices)
+                        faces_list.append(tmp_mesh.faces + total_num_vertices)
+                        total_num_vertices += len(tmp_mesh.vertices)
                 elif self.type_of_spaces[cabinet_idx][space_idx] == 2:
                     for mesh_idx in range(2):
                         if mesh_idx == 0:
                             mesh_position = [self.cabinet_offset[cabinet_idx][0],
                                              _pos + self.cabinet_offset[cabinet_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.door_sizes[0]) / 2]
-                            self.mesh = Cuboid(_height,
+                            tmp_mesh = Cuboid(_height,
                                                self.cabinet_size[cabinet_idx][0] - 2 * self.cab_left_right_inner_sizes[actual_idx],
                                                self.door_sizes[0],
                                                position=mesh_position)
@@ -1672,7 +1674,7 @@ class Regular_cabinet(ConceptTemplate):
                                              _pos + self.cabinet_offset[cabinet_idx][1] + self.door_handles_offsets[cabinet_idx][space_idx][1],
                                              self.cabinet_offset[cabinet_idx][2] + (self.cabinet_size[cabinet_idx][2] + self.door_sizes[0]) / 2 + (
                                                      self.door_handles_size[cabinet_idx][2] + self.door_sizes[0]) / 2]
-                            self.mesh = Cuboid(self.door_handles_size[cabinet_idx][1], self.door_handles_size[cabinet_idx][0], self.door_handles_size[cabinet_idx][2],
+                            tmp_mesh = Cuboid(self.door_handles_size[cabinet_idx][1], self.door_handles_size[cabinet_idx][0], self.door_handles_size[cabinet_idx][2],
                                                position=mesh_position, rotation=mesh_rotation)
 
                     # special case for top and beneath cabinet to adjust the position of the cabinet 

@@ -1,0 +1,354 @@
+# Crash Risk Report — Pass 1 Step 1.2
+
+---
+
+## A) Empty-concat crash risk (70 classes)
+
+All geometry is conditional — `np.concatenate([])` will crash if all flags are off.
+
+- `Box/Cuboidal_Leg` (line 230)
+- `Box/Fourfold_Cover` (line 75)
+- `Chair/C_shaped_office_leg` (line 495)
+- `Chair/Ladder_back` (line 112)
+- `Chair/Latice_back` (line 247)
+- `Chair/Office_armrest` (line 937)
+- `Chair/Regular_leg` (line 397)
+- `Chair/Regular_leg_with_splat` (line 661)
+- `Chair/Slat_back` (line 330)
+- `Chair/Solid_armrest` (line 896)
+- `Chair/Splat_back` (line 180)
+- `Chair/Star_leg` (line 581)
+- `Dishwasher/Multilevel_Leg` (line 605)
+- `Display/CuboidalRear_Support` (line 292)
+- `Display/Cuboidal_Support` (line 336)
+- `Display/Trifold_Support` (line 377)
+- `Door/Cylindrical_Handle` (line 561)
+- `Door/LShape_Handle` (line 314)
+- `Door/PiShape_Handle` (line 444)
+- `Door/Spherical_Handle` (line 683)
+- `Door/Standard_Door` (line 10)
+- `Door/Standard_Hinge` (line 265)
+- `Eyeglasses/Regular_Leg` (line 461)
+- `Eyeglasses/TrapezoidalFrame_Glasses` (line 87)
+- `Eyeglasses/Trifold_Leg` (line 539)
+- `Faucet/HandleY_Switch` (line 895)
+- `Faucet/HandleZ_Switch` (line 969)
+- `Faucet/Knob_Switch` (line 825)
+- `Faucet/Quadfold_Spout` (line 479)
+- `Faucet/RotaryX_Switch` (line 1448)
+- `Faucet/RotaryY_Switch` (line 1542)
+- `Faucet/RotaryZ_Switch` (line 1625)
+- `Faucet/ShowerRose_Spout` (line 398)
+- `Faucet/SimplifiedZ_Switch` (line 781)
+- `Faucet/Trifold_Spout` (line 342)
+- `Kettle/Straight_Spout` (line 586)
+- `KitchenPot/Multilevel_Tophandle` (line 326)
+- `Laptop/Cuboidal_Connector` (line 85)
+- `Laptop/Cylindrical_Connector` (line 130)
+- `Oven/Multilevel_Leg` (line 775)
+- `Refrigerator/Multilevel_Leg` (line 651)
+- `Safe/Cuboidal_Leg` (line 744)
+- `StorageFurniture/Enclosed_leg` (line 125)
+- `StorageFurniture/Regular_door` (line 184)
+- `StorageFurniture/Regular_drawer` (line 239)
+- `StorageFurniture/Regular_front_panel` (line 335)
+- `StorageFurniture/Storagefurniture_body` (line 10)
+- `Switch/Cuboidal_Plug` (line 396)
+- `Switch/Cylindrical_Plug` (line 508)
+- `Switch/FlipX_Switch` (line 232)
+- `Switch/FlipY_Switch` (line 277)
+- `Switch/Lever_Switch` (line 322)
+- `Switch/Round_Switch` (line 183)
+- `Table/Cable_stayed_leg` (line 461)
+- `Table/Cylindrical_sublayer` (line 960)
+- `Table/Desk_type_leg` (line 804)
+- `Table/Regular_cabinet` (line 1209)
+- `Table/Regular_door` (line 1152)
+- `Table/Regular_drawer` (line 1053)
+- `Table/Regular_leg` (line 122)
+- `Table/Regular_partition` (line 1702)
+- `Table/Regular_sublayer` (line 901)
+- `Table/Regular_with_splat_leg` (line 250)
+- `Table/Star_leg` (line 573)
+- `Window/Arched_Handle` (line 622)
+- `Window/Asymmetrical_Window` (line 296)
+- `Window/Cuboidal_Handle` (line 534)
+- `Window/LShaped_Handle` (line 776)
+- `Window/Symmetrical_Window` (line 48)
+- `Window/VerticalSlid_Window` (line 423)
+
+## B) float in range() (117 occurrences)
+
+- `Bottle` line 33: `for i in range(num_levels[0] - 1):`
+- `Chair` line 136: `for i in range(3 + number_of_subs[0]):`
+- `Chair` line 204: `for i in range(3 + number_of_subs[0]):`
+- `Chair` line 273: `for i in range(4 + number_of_subs[0]):`
+- `Chair` line 355: `for i in range(2 + number_of_subs[0]):`
+- `Chair` line 423: `for i in range(number_of_legs[0]):`
+- `Chair` line 606: `for i in range(1 + number_of_sub_legs[0]):`
+- `Dispenser` line 33: `for i in range(num_levels[0] - 1):`
+- `Dispenser` line 114: `for i in range(num_levels[0]):`
+- `Display` line 310: `for i in range(number_of_supports[0]):`
+- `Display` line 352: `for i in range(number_of_supports[0]):`
+- `Door` line 285: `for existence in range(existence_of_door[0] + existence_of_door[1]):`
+- `Door` line 286: `for i in range(number_of_hinge[0]):`
+- `Faucet` line 874: `for i in range(number_of_cylinder[0]):`
+- `Faucet` line 948: `for i in range(number_of_cube[0]):`
+- `Faucet` line 1022: `for i in range(number_of_cube[0]):`
+- `Faucet` line 1509: `for i in range(number_of_sub[0]):`
+- `Faucet` line 1569: `for j in range(number_of_switch[0]):`
+- `Faucet` line 1592: `for i in range(number_of_sub[0]):`
+- `Faucet` line 1652: `for j in range(number_of_switch[0]):`
+- `Faucet` line 1679: `for i in range(number_of_sub[0]):`
+- `Globe` line 412: `for i in range(num_legs[0]):`
+- `Globe` line 531: `for i in range(num_legs[0]):`
+- `Kettle` line 172: `for i in range(num_levels[0] - 1):`
+- `Kettle` line 247: `for i in range(num_knobs[0]):`
+- `Kettle` line 627: `for i in range(num_of_sub_spouts[0]):`
+- `KitchenPot` line 345: `for i in range(num_levels[0]):`
+- `Laptop` line 104: `for i in range(number_of_connector[0]):`
+- `Laptop` line 147: `for i in range(number_of_connector[0]):`
+- `Microwave` line 410: `for i in range(num_buttons[0]):`
+- `Mug` line 145: `for i in range(num_levels[0] - 1):`
+- `Oven` line 616: `for i in range(num_buttons[0]):`
+- `Oven` line 737: `for i in range(num_burners[0]):`
+- `Safe` line 145: `for i in range(num_of_sub_clapboards[0]):`
+- `Safe` line 536: `for i in range(num_forks[0]):`
+- `Safe` line 603: `for i in range(num_forks[0]):`
+- `Shampoo` line 34: `for part_idx in range(1, num_of_part[0]):`
+- `Shampoo` line 147: `for part_idx in range(num_of_part[0]):`
+- `StorageFurniture` line 31: `self.EACH_number_of_layer = [storagefurniture_layers_params[i * 5] for i in range(WHOLE_number_of_layer[0] + 1)]`
+- `StorageFurniture` line 32: `self.EACH_layer_sizes = [storagefurniture_layers_params[i * 5 + 1: i * 5 + 3] for i in range(WHOLE_number_of_layer[0] + 1)]`
+- `StorageFurniture` line 33: `self.EACH_layer_offset = [storagefurniture_layers_params[i * 5 + 3] for i in range(WHOLE_number_of_layer[0] + 1)]`
+- `StorageFurniture` line 34: `self.EACH_interval_between_layers = [storagefurniture_layers_params[i * 5 + 4] for i in range(WHOLE_number_of_layer[0] + 1)]`
+- `StorageFurniture` line 50: `for mesh_idx in range(sum(TOTAL_mesh_list[:3])):`
+- `StorageFurniture` line 90: `for mesh_idx in range(self.EACH_number_of_layer[space_idx]):`
+- `StorageFurniture` line 193: `self.door_size = [doors_params[i * 12: i * 12 + 3] for i in range(number_of_door[0])]`
+- `StorageFurniture` line 194: `self.handle_size = [doors_params[i * 12 + 3: i * 12 + 6] for i in range(number_of_door[0])]`
+- `StorageFurniture` line 195: `self.handle_offset = [doors_params[i * 12 + 6: i * 12 + 8] for i in range(number_of_door[0])]`
+- `StorageFurniture` line 196: `self.door_rotation = [doors_params[i * 12 + 8] for i in range(number_of_door[0])]`
+- `StorageFurniture` line 197: `self.door_offset = [doors_params[i * 12 + 9: i * 12 + 12] for i in range(number_of_door[0])]`
+- `StorageFurniture` line 204: `for door_idx in range(self.number_of_door[0]):`
+- `StorageFurniture` line 247: `self.drawer_size = [drawers_params[i * 20: i * 20 + 3] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 248: `self.bottom_size = [drawers_params[i * 20 + 3] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 249: `self.front_size = [drawers_params[i * 20 + 4: i * 20 + 7] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 250: `self.front_offset = [drawers_params[i * 20 + 7] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 251: `self.left_right_inner_size = [drawers_params[i * 20 + 8] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 252: `self.rear_front_inner_size = [drawers_params[i * 20 + 9] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 253: `self.number_of_handle = [drawers_params[i * 20 + 10] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 254: `self.handle_sizes = [drawers_params[i * 20 + 11: i * 20 + 14] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 255: `self.handle_offset = [drawers_params[i * 20 + 14: i * 20 + 16] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 256: `self.handle_separation = [drawers_params[i * 20 + 16] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 257: `self.drawer_offset = [drawers_params[i * 20 + 17: i * 20 + 20] for i in range(number_of_drawer[0])]`
+- `StorageFurniture` line 264: `for drawer_idx in range(number_of_drawer[0]):`
+- `StorageFurniture` line 265: `for mesh_idx in range(6 + self.number_of_handle[drawer_idx]):`
+- `StorageFurniture` line 343: `self.frontPanel_size = [frontPanel_params[i * 6: i * 6 + 3] for i in range(number_of_frontPanel[0])]`
+- `StorageFurniture` line 344: `self.frontPanel_offset = [frontPanel_params[i * 6 + 3: i * 6 + 6] for i in range(number_of_frontPanel[0])]`
+- `StorageFurniture` line 351: `for frontPanel_idx in range(number_of_frontPanel[0]):`
+- `Switch` line 205: `for i in range(number_of_switch[0]):`
+- `Switch` line 250: `for i in range(number_of_switch[0]):`
+- `Switch` line 295: `for i in range(number_of_switch[0]):`
+- `Switch` line 342: `for i in range(number_of_switch[0]):`
+- `Switch` line 413: `for j in range(row_of_contact[0]):`
+- `Switch` line 414: `for i in range(column_of_contact[0]):`
+- `Switch` line 525: `for j in range(row_of_contact[0]):`
+- `Switch` line 526: `for i in range(column_of_contact[0]):`
+- `Table` line 152: `for i in range(number_of_legs[0]):`
+- `Table` line 499: `for i in range(number_of_legs[0]):`
+- `Table` line 602: `for i in range(1 + number_of_sub_legs[0]):`
+- `Table` line 835: `for i in range(4 + number_of_connections[0]):`
+- `Table` line 923: `for i in range(number_of_subs[0]):`
+- `Table` line 982: `for i in range(number_of_subs[0]):`
+- `Table` line 1062: `self.drawer_size = [drawers_params[i * 21: i * 21 + 3] for i in range(number_of_drawer[0])]`
+- `Table` line 1063: `self.bottom_size = [drawers_params[i * 21 + 3] for i in range(number_of_drawer[0])]`
+- `Table` line 1064: `self.front_size = [drawers_params[i * 21 + 4: i * 21 + 7] for i in range(number_of_drawer[0])]`
+- `Table` line 1065: `self.front_offset = [drawers_params[i * 21 + 7] for i in range(number_of_drawer[0])]`
+- `Table` line 1066: `self.left_right_inner_size = [drawers_params[i * 21 + 8] for i in range(number_of_drawer[0])]`
+- `Table` line 1067: `self.rear_front_inner_size = [drawers_params[i * 21 + 9] for i in range(number_of_drawer[0])]`
+- `Table` line 1068: `self.number_of_handle = [drawers_params[i * 21 + 10] for i in range(number_of_drawer[0])]`
+- `Table` line 1069: `self.handle_sizes = [drawers_params[i * 21 + 11: i * 21 + 14] for i in range(number_of_drawer[0])]`
+- `Table` line 1070: `self.handle_rotation = [drawers_params[i * 21 + 14] for i in range(number_of_drawer[0])]`
+- `Table` line 1071: `self.handle_offset = [drawers_params[i * 21 + 15: i * 21 + 17] for i in range(number_of_drawer[0])]`
+- `Table` line 1072: `self.handle_separation = [drawers_params[i * 21 + 17] for i in range(number_of_drawer[0])]`
+- `Table` line 1073: `self.drawer_offset = [drawers_params[i * 21 + 18: i * 21 + 21] for i in range(number_of_drawer[0])]`
+- `Table` line 1080: `for drawer_idx in range(number_of_drawer[0]):`
+- `Table` line 1081: `for mesh_idx in range(6 + self.number_of_handle[drawer_idx]):`
+- `Table` line 1161: `self.door_size = [doors_params[i * 13: i * 13 + 3] for i in range(number_of_door[0])]`
+- `Table` line 1162: `self.handle_size = [doors_params[i * 13 + 3: i * 13 + 6] for i in range(number_of_door[0])]`
+- `Table` line 1163: `self.handle_rotation = [doors_params[i * 13 + 6] for i in range(number_of_door[0])]`
+- `Table` line 1164: `self.handle_offset = [doors_params[i * 13 + 7: i * 13 + 9] for i in range(number_of_door[0])]`
+- `Table` line 1165: `self.door_rotation = [doors_params[i * 13 + 9] for i in range(number_of_door[0])]`
+- `Table` line 1166: `self.door_offset = [doors_params[i * 13 + 10: i * 13 + 13] for i in range(number_of_door[0])]`
+- `Table` line 1173: `for door_idx in range(self.number_of_door[0]):`
+- `Table` line 1370: `for mesh_idx in range(sum(total_mesh_list[:2])):`
+- `Table` line 1425: `for space_idx in range(self.number_of_layers[cabinet_idx] + 1):`
+- `Table` line 1441: `for mesh_idx in range(5 + self.drawer_number_of_handles[cabinet_idx][space_idx]):`
+- `Table` line 1545: `for mesh_idx in range(sum(total_mesh_list[:2])):`
+- `Table` line 1592: `for space_idx in range(self.number_of_layers[actual_idx] + 1):`
+- `Table` line 1608: `for mesh_idx in range(5 + self.drawer_number_of_handles[cabinet_idx][space_idx]):`
+- `Trashcan` line 402: `for i in range(num_sides[0]):`
+- `Washingmachine` line 319: `for i in range(num_buttons[0]):`
+- `Window` line 364: `for i in range(number_of_window[0]):`
+- `Window` line 475: `for i in range(number_of_window[0]):`
+- `Window` line 553: `for i in range(num_of_handle[0]):`
+- `Window` line 580: `for i in range(num_of_handle[1]):`
+- `Window` line 647: `for i in range(num_of_handle[0]):`
+- `Window` line 704: `for i in range(num_of_handle[1]):`
+- `Window` line 799: `for i in range(num_of_handle[0]):`
+- `Window` line 852: `for i in range(num_of_handle[1]):`
+
+## C) if/elif with no else — potential UnboundLocalError (32 cases)
+
+- `Box/Cuboidal_Leg` line 247: assigns ['mesh_position']
+- `Box/Cuboidal_Leg` line 259: assigns ['mesh_position']
+- `Box/Cuboidal_Leg` line 282: assigns ['mesh_position']
+- `Dishwasher/Multilevel_Leg` line 639: assigns ['mesh_position']
+- `Dishwasher/Multilevel_Leg` line 651: assigns ['mesh_position']
+- `Dishwasher/Multilevel_Leg` line 674: assigns ['mesh_position']
+- `Door/Standard_Door` line 27: assigns ['left_mesh_position']
+- `Door/Standard_Door` line 43: assigns ['left_mesh_position']
+- `Oven/Multilevel_Leg` line 792: assigns ['mesh_position']
+- `Oven/Multilevel_Leg` line 804: assigns ['mesh_position']
+- `Oven/Multilevel_Leg` line 827: assigns ['mesh_position']
+- `Refrigerator/Multilevel_Leg` line 668: assigns ['mesh_position']
+- `Refrigerator/Multilevel_Leg` line 680: assigns ['mesh_position']
+- `Refrigerator/Multilevel_Leg` line 703: assigns ['mesh_position']
+- `Safe/Cuboidal_Leg` line 761: assigns ['mesh_position']
+- `Safe/Cuboidal_Leg` line 773: assigns ['mesh_position']
+- `Safe/Cuboidal_Leg` line 796: assigns ['mesh_position']
+- `Scissors/Cuboidal_Shaft` line 30: assigns ['left_mesh_position']
+- `Scissors/Cuboidal_Shaft` line 50: assigns ['right_mesh_position']
+- `Scissors/Double_Cuboidal_Shaft` line 119: assigns ['left_mesh_position']
+- `Scissors/Double_Cuboidal_Shaft` line 148: assigns ['left_front_mesh_position', 'left_front_mesh_position_2']
+- `Scissors/Double_Cuboidal_Shaft` line 171: assigns ['right_mesh_position']
+- `Scissors/Double_Cuboidal_Shaft` line 200: assigns ['right_front_mesh_position', 'right_front_mesh_position_2']
+- `Trashcan/Holed_Cuboidal_Cover` line 483: assigns ['mesh_1_position', 'mesh_2_position', 'mesh_3_position', 'mesh_position']
+- `Trashcan/Holed_Cuboidal_Cover` line 530: assigns ['mesh_1_position', 'mesh_2_position', 'mesh_3_position', 'mesh_position']
+- `Trashcan/Holed_Cuboidal_Cover` line 577: assigns ['mesh_1_position', 'mesh_2_position', 'mesh_3_position', 'mesh_position']
+- `Trashcan/Holed_Cuboidal_Cover` line 624: assigns ['mesh_1_position', 'mesh_2_position', 'mesh_3_position', 'mesh_position']
+- `Window/Symmetrical_Window` line 119: assigns ['window_configurations']
+- `Window/Symmetrical_Window` line 127: assigns ['window_configurations']
+- `Window/Symmetrical_Window` line 140: assigns ['window_configurations']
+- `Window/Symmetrical_Window` line 158: assigns ['window_configurations']
+- `Window/Symmetrical_Window` line 181: assigns ['window_configurations']
+
+## D) Trailing comma on list — makes it a tuple (1 confirmed real case)
+
+NOTE: Script produced 114 results but nearly all are false positives (keyword args
+inside multi-line constructor calls). Only one standalone assignment confirmed:
+
+
+- `Box` line 42: `top_bottom_offset = [top_bottom_offset[0] - middle_offset_x, top_bottom_offset[1] - middle_offset_z],`
+- `Box` line 55: `top_offset = [middle_offset_x, middle_offset_z],`
+- `Chair` line 223: `sub_position = [sub_offset[0] + (i - 3) * interval_between_subs[0],`
+- `Chair` line 301: `sub_vertical_position = [sub_vertical_offset[0] + (i - 4) * interval_between_subs[0],`
+- `Eyeglasses` line 34: `rotation=[0, glass_rotation[0], glass_rotation[1]],`
+- `Eyeglasses` line 35: `position=[0, 0, 0],`
+- `Eyeglasses` line 45: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 57: `rotation=[0, -glass_rotation[0], -glass_rotation[1]],`
+- `Eyeglasses` line 58: `position=[0, 0, 0],`
+- `Eyeglasses` line 68: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 114: `top_offset=[-top_offset[0] * width[0] / size[2], 0],`
+- `Eyeglasses` line 128: `top_offset=[-top_offset[0] * width[0] / size[2], 0],`
+- `Eyeglasses` line 142: `top_offset=[-((size[1] * width[0] / size[2] + size[0] * (size[2] - width[0]) / size[2]) - (size[1] * (size[2] - width[0]) / size[2] + size[0] * width[0] / size[2])) / 2 - top_offset[0] * (size[2] - 2 * width[0]) / size[2], 0],`
+- `Eyeglasses` line 156: `top_offset=[((size[1] * width[0] / size[2] + size[0] * (size[2] - width[0]) / size[2]) - (size[1] * (size[2] - width[0]) / size[2] + size[0] * width[0] / size[2])) / 2 - top_offset[0] * (size[2] - 2 * width[0]) / size[2], 0,],`
+- `Eyeglasses` line 170: `rotation=[0, glass_rotation[0], glass_rotation[1]],`
+- `Eyeglasses` line 171: `position=[0, 0, 0],`
+- `Eyeglasses` line 180: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 194: `top_offset=[-top_offset[0] * width[0] / size[2], 0],`
+- `Eyeglasses` line 208: `top_offset=[-top_offset[0] * width[0] / size[2], 0],`
+- `Eyeglasses` line 222: `top_offset=[-((size[1] * width[0] / size[2] + size[0] * (size[2] - width[0]) / size[2]) - (size[1] * (size[2] - width[0]) / size[2] + size[0] * width[0] / size[2])) / 2 - top_offset[0] * (size[2] - 2 * width[0]) / size[2], 0],`
+- `Eyeglasses` line 236: `top_offset=[((size[1] * width[0] / size[2] + size[0] * (size[2] - width[0]) / size[2]) - (size[1] * (size[2] - width[0]) / size[2] + size[0] * width[0] / size[2])) / 2 - top_offset[0] * (size[2] - 2 * width[0]) / size[2], 0],`
+- `Eyeglasses` line 250: `rotation=[0, -glass_rotation[0], -glass_rotation[1]],`
+- `Eyeglasses` line 251: `position=[0, 0, 0],`
+- `Eyeglasses` line 261: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 304: `rotation=[0, glass_rotation[0], glass_rotation[1]],`
+- `Eyeglasses` line 305: `position=[0, 0, 0],`
+- `Eyeglasses` line 319: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 332: `rotation=[0, -glass_rotation[0], -glass_rotation[1]],`
+- `Eyeglasses` line 333: `position=[0, 0, 0],`
+- `Eyeglasses` line 347: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 389: `rotation=[np.pi / 2, 0, 0],`
+- `Eyeglasses` line 390: `position=[0, 0, 0],`
+- `Eyeglasses` line 395: `rotation=[0, glass_rotation[0], glass_rotation[1]],`
+- `Eyeglasses` line 396: `position=[0, 0, 0],`
+- `Eyeglasses` line 410: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 421: `rotation=[np.pi / 2, 0, 0],`
+- `Eyeglasses` line 422: `position=[0, 0, 0],`
+- `Eyeglasses` line 427: `rotation=[0, -glass_rotation[0], -glass_rotation[1]],`
+- `Eyeglasses` line 428: `position=[0, 0, 0],`
+- `Eyeglasses` line 442: `rotation=[0, 0, 0],`
+- `Eyeglasses` line 498: `position=[0, 0, -size1[2]],`
+- `Eyeglasses` line 499: `rotation=[-rotation_2[0], -direction * rotation_2[1], 0],`
+- `Eyeglasses` line 519: `rotation=[-rotation_1[0], -direction * rotation_1[1], 0],`
+- `Eyeglasses` line 577: `position=[0, 0, -size1[2]],`
+- `Eyeglasses` line 578: `rotation=[-rotation_2[0], -direction * rotation_2[1], 0],`
+- `Eyeglasses` line 594: `position=[0, 0, 0],`
+- `Eyeglasses` line 595: `rotation=[-rotation_1[0], -direction * rotation_1[1], 0],`
+- `Eyeglasses` line 616: `rotation=[0, 0, 0],`
+- `Faucet` line 460: `rotation=[showerHead_rotation[0], 0, 0],`
+- `Knife` line 381: `top_offset = [0, root_z_offset[0]],`
+- `Knife` line 394: `top_offset = [0, tip_z_offset[0]],`
+- `Knife` line 438: `top_offset = [0, root_z_offset[0]],`
+- `Oven` line 609: `top_offset = [0, -(bottom_size[3] - bottom_size[2]) / 2],`
+- `Pliers` line 759: `top_offset = [(front_size[1] - front_size[0]) / 2, 0],`
+- `Pliers` line 786: `top_offset = [-(behind_size[1] - behind_size[0]) / 2, 0],`
+- `Pliers` line 813: `top_offset = [-(front_size[1] - front_size[0]) / 2, 0],`
+- `Pliers` line 840: `top_offset = [(behind_size[1] - behind_size[0]) / 2, 0],`
+- `Refrigerator` line 549: `inner_offset = [0, (outer_size[2] - inner_size[2]) / 2],`
+- `Scissors` line 321: `top_offset = [root_z_offset[0], 0],`
+- `Scissors` line 336: `top_offset = [tip_z_offset[0], 0],`
+- `Scissors` line 380: `top_offset = [root_z_offset[0], 0],`
+- `Shaver` line 34: `inner_offset=[(top_size[0] - bottom_size[1]) / 2, 0],`
+- `Shaver` line 35: `top_bottom_offset=[0, 0],`
+- `StorageFurniture` line 98: `mesh_position = [self.additional_layers_attributes[9 * additional_idx + 3] - position[0],`
+- `StorageFurniture` line 101: `mesh_rotation = [self.additional_layers_attributes[9 * additional_idx + 6],`
+- `StorageFurniture` line 157: `mesh_position = [self.additional_legs_attributes[9 * i + 3],`
+- `StorageFurniture` line 160: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `StorageFurniture` line 208: `mesh_position = [self.door_offset[door_idx][0],`
+- `StorageFurniture` line 279: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `StorageFurniture` line 288: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `StorageFurniture` line 297: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `StorageFurniture` line 352: `mesh_position = [self.frontPanel_offset[frontPanel_idx][0],`
+- `Switch` line 367: `position=[0, 0, 0],`
+- `Switch` line 368: `rotation=[switch_rotation[0], 0, 0],`
+- `Switch` line 377: `rotation=[0, 0, 0],`
+- `Table` line 221: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 226: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 432: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 437: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 544: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 549: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 633: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 638: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 702: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 707: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 775: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 780: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 847: `mesh_position = [position_sign * (vertical_separation[0] / 2 - pose[0]), 2 * pose[1],`
+- `Table` line 872: `mesh_position = [self.additional_legs_attributes[9 * i + 3] - position[0],`
+- `Table` line 877: `mesh_rotation = [self.additional_legs_attributes[9 * i + 6],`
+- `Table` line 933: `mesh_position = [self.additional_sublayers_attributes[9 * i + 3] - position[0],`
+- `Table` line 936: `mesh_rotation = [self.additional_sublayers_attributes[9 * i + 6],`
+- `Table` line 992: `mesh_position = [self.additional_sublayers_attributes[9 * i + 3],`
+- `Table` line 995: `mesh_rotation = [self.additional_sublayers_attributes[9 * i + 6],`
+- `Table` line 1095: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `Table` line 1104: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `Table` line 1112: `mesh_position = [self.drawer_offset[drawer_idx][0],`
+- `Table` line 1177: `mesh_position = [self.door_offset[door_idx][0],`
+- `Table` line 1455: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1463: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1502: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1511: `mesh_position = [self.cabinet_offset[cabinet_idx][0] + self.door_handles_offsets[cabinet_idx][space_idx][0],`
+- `Table` line 1622: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1630: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1662: `mesh_position = [self.cabinet_offset[cabinet_idx][0],`
+- `Table` line 1671: `mesh_position = [self.cabinet_offset[cabinet_idx][0] + self.door_handles_offsets[cabinet_idx][space_idx][0],`
+- `Trashcan` line 83: `top_bottom_offset = [top_offset[0], top_offset[1]],`
+- `Trashcan` line 100: `top_offset = [middle_offset_x, middle_offset_z],`
+- `Washingmachine` line 42: `inner_cylinder_offset = [inner_offset[0], inner_offset[1]],`
+- `Washingmachine` line 95: `inner_cylinder_offset = [inner_offset[0], -inner_offset[1]],`
+- `Washingmachine` line 312: `top_offset = [0, -(bottom_size[3] - bottom_size[2]) / 2],`
+- `Window` line 263: `rotation=[np.pi / 2, 0, 0],`
+- `Window` line 390: `rotation=[np.pi / 2, 0, 0],`
+- `Window` line 501: `rotation=[np.pi / 2, 0, 0],`

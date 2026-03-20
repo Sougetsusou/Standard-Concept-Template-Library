@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -168,19 +170,22 @@ class Multilevel_Body(ConceptTemplate):
         faces_list.append(self.top_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.top_mesh.vertices)
 
+        level_top_radii = [level_1_top_radius, level_2_top_radius, level_3_top_radius, level_4_top_radius, level_5_top_radius]
+        level_heights   = [level_1_height,     level_2_height,     level_3_height,     level_4_height,     level_5_height]
+
         delta_height = level_1_height[0] / 2
-        for i in range(num_levels[0] - 1):
-            delta_height += locals()['level_'+ str(i+2) +'_height'][0] / 2
+        for i in range(int(num_levels[0]) - 1):
+            delta_height += level_heights[i+1][0] / 2
             top_mesh_position = [0, delta_height, 0]
-            delta_height += locals()['level_'+ str(i+2) +'_height'][0] / 2
-            self.top_mesh = Ring(locals()['level_'+ str(i+2) +'_height'][0], locals()['level_'+ str(i+2) +'_top_radius'][0], locals()['level_'+ str(i+2) +'_top_radius'][1], 
-                                 outer_bottom_radius = locals()['level_'+ str(i+1) +'_top_radius'][0],
-                                 inner_bottom_radius = locals()['level_'+ str(i+1) +'_top_radius'][1],
+            delta_height += level_heights[i+1][0] / 2
+            tmp_top_mesh = Ring(level_heights[i+1][0], level_top_radii[i+1][0], level_top_radii[i+1][1],
+                                 outer_bottom_radius = level_top_radii[i][0],
+                                 inner_bottom_radius = level_top_radii[i][1],
                                  x_z_ratio = x_z_ratio[0],
                                  position=top_mesh_position)
-            vertices_list.append(self.top_mesh.vertices)
-            faces_list.append(self.top_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.top_mesh.vertices)
+            vertices_list.append(tmp_top_mesh.vertices)
+            faces_list.append(tmp_top_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_top_mesh.vertices)
 
 
         self.vertices = np.concatenate(vertices_list)
@@ -243,16 +248,19 @@ class Standard_Cover(ConceptTemplate):
         faces_list.append(self.bottom_mesh.faces + total_num_vertices)
         total_num_vertices += len(self.bottom_mesh.vertices)
 
+        knob_sizes = [knob_1_size, knob_2_size, knob_3_size, knob_4_size, knob_5_size]
+
         delta_height = outer_size[2]
-        for i in range(num_knobs[0]):
-            delta_height += locals()['knob_%d_size'%(i+1)][2] / 2
+        for i in range(int(num_knobs[0])):
+            k_size = knob_sizes[i]
+            delta_height += k_size[2] / 2
             knob_mesh_position = [0, delta_height, 0]
-            self.knob_mesh = Cylinder(locals()['knob_%d_size'%(i+1)][2], locals()['knob_%d_size'%(i+1)][0], locals()['knob_%d_size'%(i+1)][1], 
+            tmp_knob_mesh = Cylinder(k_size[2], k_size[0], k_size[1],
                                       position=knob_mesh_position)
-            delta_height += locals()['knob_%d_size'%(i+1)][2] / 2
-            vertices_list.append(self.knob_mesh.vertices)
-            faces_list.append(self.knob_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.knob_mesh.vertices)
+            delta_height += k_size[2] / 2
+            vertices_list.append(tmp_knob_mesh.vertices)
+            faces_list.append(tmp_knob_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_knob_mesh.vertices)
 
 
         self.vertices = np.concatenate(vertices_list)
@@ -621,37 +629,40 @@ class Straight_Spout(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
+        spout_radii             = [spout_1_radius,            spout_2_radius,            spout_3_radius,            spout_4_radius]
+        spout_thinknesses       = [spout_1_thinkness,         spout_2_thinkness,         spout_3_thinkness,         spout_4_thinkness]
+        spout_lengths           = [spout_1_length,            spout_2_length,            spout_3_length,            spout_4_length]
+        spout_generatrix_offsets= [spout_1_generatrix_offset, spout_2_generatrix_offset, spout_3_generatrix_offset, spout_4_generatrix_offset]
+        spout_rotations         = [spout_1_rotation,          spout_2_rotation,          spout_3_rotation,          spout_4_rotation]
+
         total_delta_y = -(spout_1_length[0] + spout_1_length[1]) / 4 * np.sin(spout_1_rotation[0])
         total_delta_z = -(spout_1_length[0] + spout_1_length[1]) / 4 * np.cos(spout_1_rotation[0])
 
-        for i in range(num_of_sub_spouts[0]):
-            total_delta_y += (locals()['spout_%d_length'%(i+1)][0] + locals()['spout_%d_length'%(i+1)][1]) / 4 * np.sin(locals()['spout_%d_rotation'%(i+1)][0])
-            total_delta_z += (locals()['spout_%d_length'%(i+1)][0] + locals()['spout_%d_length'%(i+1)][1]) / 4 * np.cos(locals()['spout_%d_rotation'%(i+1)][0])
-            mesh_position = [
-                0, 
-                total_delta_y, 
-                total_delta_z
-            ]
-            total_delta_y += (locals()['spout_%d_length'%(i+1)][0] + locals()['spout_%d_length'%(i+1)][1]) / 4 * np.sin(locals()['spout_%d_rotation'%(i+1)][0])
-            total_delta_z += (locals()['spout_%d_length'%(i+1)][0] + locals()['spout_%d_length'%(i+1)][1]) / 4 * np.cos(locals()['spout_%d_rotation'%(i+1)][0])
-            mesh_rotation = [
-                np.pi / 2 - locals()['spout_%d_rotation'%(i+1)][0], 
-                np.pi / 2, 
-                0
-            ]
-            self.mesh = Ring(height = locals()['spout_%d_length'%(i+1)][0], 
-                             outer_top_radius = locals()['spout_%d_radius'%(i+1)][0], 
-                             inner_top_radius = locals()['spout_%d_radius'%(i+1)][0] - locals()['spout_%d_thinkness'%(i+1)][0] * 2,
-                             outer_bottom_radius = locals()['spout_%d_radius'%(i+1)][1], 
-                             inner_bottom_radius = locals()['spout_%d_radius'%(i+1)][1] - locals()['spout_%d_thinkness'%(i+1)][0] * 2,
-                             back_height = locals()['spout_%d_length'%(i+1)][1], 
-                             generatrix_offset = locals()['spout_%d_generatrix_offset'%(i+1)][0], 
+        for i in range(int(num_of_sub_spouts[0])):
+            s_length  = spout_lengths[i]
+            s_radius  = spout_radii[i]
+            s_thick   = spout_thinknesses[i]
+            s_gen     = spout_generatrix_offsets[i]
+            s_rot     = spout_rotations[i]
+            total_delta_y += (s_length[0] + s_length[1]) / 4 * np.sin(s_rot[0])
+            total_delta_z += (s_length[0] + s_length[1]) / 4 * np.cos(s_rot[0])
+            mesh_position = [0, total_delta_y, total_delta_z]
+            total_delta_y += (s_length[0] + s_length[1]) / 4 * np.sin(s_rot[0])
+            total_delta_z += (s_length[0] + s_length[1]) / 4 * np.cos(s_rot[0])
+            mesh_rotation = [np.pi / 2 - s_rot[0], np.pi / 2, 0]
+            tmp_mesh = Ring(height = s_length[0],
+                             outer_top_radius = s_radius[0],
+                             inner_top_radius = s_radius[0] - s_thick[0] * 2,
+                             outer_bottom_radius = s_radius[1],
+                             inner_bottom_radius = s_radius[1] - s_thick[0] * 2,
+                             back_height = s_length[1],
+                             generatrix_offset = s_gen[0],
                              position = mesh_position,
                              rotation = mesh_rotation,
                              rotation_order = "YXZ")
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, adjust_position_from_rotation, list_add
@@ -399,7 +401,7 @@ class Holed_Cylindrical_Cover(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
-        for i in range(num_sides[0]):
+        for i in range(int(num_sides[0])):
             rotation_y = i * np.pi * 2 / num_sides[0]
             mesh_position = [
                 0,
@@ -407,12 +409,12 @@ class Holed_Cylindrical_Cover(ConceptTemplate):
                 0
             ]
             mesh_rotation = [0, rotation_y, 0]
-            self.mesh = Ring(height[2], radius[0], radius[1], exist_angle[0],
+            tmp_mesh = Ring(height[2], radius[0], radius[1], exist_angle[0],
                              position = mesh_position,
                              rotation = mesh_rotation)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         top_mesh_position = [
             0,

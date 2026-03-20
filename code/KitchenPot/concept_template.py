@@ -1,4 +1,6 @@
 import numpy as np
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation, adjust_position_from_rotation, list_add
@@ -341,16 +343,18 @@ class Multilevel_Tophandle(ConceptTemplate):
         faces_list = []
         total_num_vertices = 0
 
+        level_sizes = [level_1_size, level_2_size, level_3_size, level_4_size]
+
         delta_height = 0
-        for i in range(num_levels[0]):
-            delta_height += locals()['level_'+ str(i+1) +'_size'][2] / 2
+        for i in range(int(num_levels[0])):
+            delta_height += level_sizes[i][2] / 2
             mesh_position = [0, delta_height, 0]
-            delta_height += locals()['level_'+ str(i+1) +'_size'][2] / 2
-            self.mesh = Cylinder(locals()['level_'+ str(i+1) +'_size'][2], locals()['level_'+ str(i+1) +'_size'][0], locals()['level_'+ str(i+1) +'_size'][1], 
+            delta_height += level_sizes[i][2] / 2
+            tmp_mesh = Cylinder(level_sizes[i][2], level_sizes[i][0], level_sizes[i][1],
                                  position = mesh_position)
-            vertices_list.append(self.mesh.vertices)
-            faces_list.append(self.mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.mesh.vertices)
+            vertices_list.append(tmp_mesh.vertices)
+            faces_list.append(tmp_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)

@@ -1,5 +1,7 @@
 import copy
 import open3d as o3d
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'shared'))
 from base_template import ConceptTemplate
 from geometry_template import *
 from utils import apply_transformation
@@ -31,16 +33,16 @@ class Cylindrical_body(ConceptTemplate):
         total_num_vertices += len(self.mesh_1.vertices)
 
         delta_height = self.all_sizes[0][1] / 2
-        for part_idx in range(1, num_of_part[0]):
+        for part_idx in range(int(1, num_of_part[0])):
             top_radius, bottom_radius, height = self.all_sizes[part_idx][0], self.all_sizes[part_idx - 1][0], self.all_sizes[part_idx][1]
             delta_height += height
             part_mesh_position = [0, delta_height - height / 2, 0]
-            self.part_mesh = Cylinder(height=height, top_radius=top_radius, bottom_radius=bottom_radius, top_radius_z=top_radius * x_z_ratio[0],
+            tmp_part_mesh = Cylinder(height=height, top_radius=top_radius, bottom_radius=bottom_radius, top_radius_z=top_radius * x_z_ratio[0],
                                       bottom_radius_z=bottom_radius * x_z_ratio[0],
                                       position=part_mesh_position)
-            vertices_list.append(self.part_mesh.vertices)
-            faces_list.append(self.part_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.part_mesh.vertices)
+            vertices_list.append(tmp_part_mesh.vertices)
+            faces_list.append(tmp_part_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_part_mesh.vertices)
 
         self.vertices = np.concatenate(vertices_list)
         self.faces = np.concatenate(faces_list)
@@ -144,13 +146,13 @@ class Regular_nozzle(ConceptTemplate):
         total_num_vertices = 0
 
         delta_height = 0
-        for part_idx in range(num_of_part[0]):
+        for part_idx in range(int(num_of_part[0])):
             delta_height += self.parts_params[part_idx][1]
             part_mesh_position = [0, delta_height - self.parts_params[part_idx][1] / 2, 0]
-            self.part_mesh = Cylinder(self.parts_params[part_idx][1], self.parts_params[part_idx][0], position=part_mesh_position)
-            vertices_list.append(self.part_mesh.vertices)
-            faces_list.append(self.part_mesh.faces + total_num_vertices)
-            total_num_vertices += len(self.part_mesh.vertices)
+            tmp_part_mesh = Cylinder(self.parts_params[part_idx][1], self.parts_params[part_idx][0], position=part_mesh_position)
+            vertices_list.append(tmp_part_mesh.vertices)
+            faces_list.append(tmp_part_mesh.faces + total_num_vertices)
+            total_num_vertices += len(tmp_part_mesh.vertices)
 
         nozzle_mesh_position = [0, delta_height + nozzle_offset[0] - nozzle_length[0] / 2 * np.sin(nozzle_rotation[0]),
                                 nozzle_length[0] / 2 * np.cos(nozzle_rotation[0]) + self.parts_params[num_of_part[0] - 1][0]]
