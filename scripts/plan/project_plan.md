@@ -47,15 +47,32 @@ The LLM learns the part template pattern and part vocabulary, not Python syntax.
 **Goal:** build a clean geometric taxonomy as the training corpus
 **Timeline: Weeks 1–3**
 
-### Week 1 — Geometric audit + unify duplicate classes
+### Strategy: Direct-rewrite into `part_template/`
+
+Rather than patching the existing `code/<Category>/concept_template.py` files
+in multiple passes, each class is written fresh into `part_template/` using
+the old code as a geometry-logic reference only. Duplicate resolution,
+convention compliance, and docstrings all happen at write time — not as
+separate passes.
+
+**Reference implementation:** `demo/part_template/` contains convention-correct
+classes for Laptop (`Cuboidal_Base`, `Hinged_Panel_Screen`, `Cuboidal_Connector`,
+`Cylindrical_Connector`). These are the template for every new class written.
+
+**Detailed migration workflow:** see `scripts/plan/edit_plan.md`.
+**Convention reference:** see `scripts/plan/coding_conventions.md`.
+
+---
+
+### Duplicate resolution
 
 The core principle: **class names describe geometry, not category origin.**
 
-For each duplicate group across categories, classify as:
+For each duplicate group, classify as:
 - **MERGE** — same primitive(s), same structure, only orientation/minor param differs
-  → unify into one class, expose orientation as a parameter
+  → write one unified class with geometric name; keep old names as thin aliases for pkl compatibility
 - **SPLIT** — different primitives or meaningfully different structure
-  → give each variant a descriptive geometric name
+  → write each variant as a separate class with a descriptive geometric name
 
 **Audit results:**
 
@@ -81,82 +98,61 @@ For each duplicate group across categories, classify as:
 | `Star_leg` (Chair/Table) | MERGE — identical structure | `Star_Leg` |
 | `Trifold_Handle` (all) | MERGE — all 3-Cuboid structure | `Trifold_Handle` |
 | `Curved_Blade` (Knife/Scissors) | MERGE — both Cuboid + quarter Cylinder | `Curved_Blade` |
-| Remaining groups | audit geometry → merge or split with descriptive name | TBD |
-
-For MERGE: write one unified class, delete duplicates, patch pkl files.
-For SPLIT: rename in-place with descriptive name, patch pkl files.
-
-**Deliverable:** every class name is a geometric description. pkl files consistent.
+| `RotaryX/Y/Z_Switch` | MERGE — axis only differs | `Rotary_Switch(axis=)` + aliases |
+| `UShapedXZ/YZ_Base` | MERGE — plane only differs | `UShaped_Base(plane=)` + aliases |
+| Remaining groups | audit geometry → merge or split with geometric name | TBD |
 
 ---
 
-### Week 2 — Reorganize into semantic part files
+### Week 1 — Write all part classes into `part_template/`
 
-Move all part classes from `code/<Category>/concept_template.py` into
-`part_template/` organized by semantic type:
+Work semantic file by semantic file, highest cross-category reuse first
+(body → leg → handle → door → cover → base → …).
 
-```
-part_template/
-  __init__.py
-  body.py         # Simple_Cuboidal_Body, Hollow_Cuboidal_Body,
-                  #   Multilevel_Body, Stacked_Cuboidal_Body, ...
-  leg.py          # Cuboidal_Leg, Regular_Leg, Star_Leg,
-                  #   Multilevel_Leg, Offset_Multilevel_Leg, ...
-  door.py         # Cuboidal_Door, Sunken_Door, Roller_Door, ...
-  handle.py       # Torus_Handle, Ring_Handle, Trifold_Handle,
-                  #   Cylindrical_Handle, Cuboidal_Handle, ...
-  cover.py        # Fourfold_Cover, Regular_Cover, Cylindrical_Cover, ...
-  blade.py        # Curved_Blade, Cusp_Blade, Regular_Blade, ...
-  button.py       # Controller_With_Button, Regular_Controller, ...
-  tray.py         # Flat_Tray, Drawer_Like_Tray, ...
-  connector.py    # Cuboidal_Connector, Cylindrical_Connector, ...
-  screen.py       # Hinged_Panel_Screen, Layered_Panel_Screen, ...
-  base.py         # Cuboidal_Base, Cylindrical_Base, Round_Base, ...
-  wheel.py        # Standard_Wheel, ...
-  window.py       # Symmetrical_Window, Asymmetrical_Window, ...
-  spout.py        # Curved_Spout, Straight_Spout, ...
-  switch.py       # Lever_Switch, Round_Switch, Rotary_Switch, ...
-  ... (~50 files total)
-```
+For each class:
+1. Identify geometry logic from old `code/<Category>/concept_template.py`.
+2. Apply duplicate resolution (MERGE or SPLIT from table above).
+3. Write the new class in `part_template/<semantic>.py` following all conventions
+   and with a structured docstring.
+4. Instantiate with a representative parameter set to verify geometry.
 
-Each file is a self-contained geometric vocabulary for that semantic part type.
-No class definitions remain in `code/<Category>/concept_template.py`.
+The old `code/<Category>/` files are never modified during this step.
 
-**Deliverable:** all classes in part_template/, all 39 visualize.py still run correctly.
+**Deliverable:** `part_template/` fully populated (~200 classes), every class
+convention-correct and docstring-complete.
 
 ---
 
-### Week 3 — Slim manifests + write docstrings
+### Week 2 — Slim category manifests + verify
 
-**Slim category files** to pure assembly manifests — imports only:
+For each of the 39 categories:
+1. Replace `code/<Category>/concept_template.py` with a pure import manifest:
+
 ```python
 # code/Box/concept_template.py
-import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'part_template'))
-
-from body import Hollow_Cuboidal_Body
-from leg import Cuboidal_Leg
-from cover import Regular_Cover, Fourfold_Cover
+from part_template.body import Simple_Cuboidal_Body
+from part_template.leg import Cuboidal_Leg
+from part_template.cover import Regular_Cover, Fourfold_Cover
 ```
 
-**Write structured docstrings** for every part class in part_template/:
-```python
-class Torus_Handle(ConceptTemplate):
-    """
-    Semantic: Handle
-    Geometry: arc-shaped handle formed from a partial torus segment
-    Used by: Bucket, Kettle, Mug
-    Parameters:
-      radius [major, minor]: major radius of arc, cross-section radius
-      exist_angle [a]: arc span in degrees
-      position, rotation: global transform
-    """
-```
+2. Run `python visualize.py` in `code/<Category>/` — geometry must be unchanged.
+3. For any category whose classes were renamed (SPLIT cases), regenerate
+   `conceptualization.pkl` so stored class names match the new imports.
 
-Docstrings are the selection mechanism — the LLM matches natural language
-descriptions to classes via these at inference time.
+**Deliverable:** all 39 `visualize.py` pass, all pkl files consistent with
+new class names, no class definitions remain in `code/<Category>/`.
 
-**Deliverable:** all part classes have docstrings. Category manifests are import-only.
+---
+
+### Week 3 — Training corpus generation
+
+Generalize `demo/scripts/generate_laptop_corpus.py` to all 39 categories:
+1. Level 2: one JSONL entry per class in `part_template/` (docstring + implementation pair).
+2. Level 3: one JSONL entry per pkl instance (category + description → part decomposition
+   + imports + full instantiation).
+3. Validate: all Level 3 examples are executable; Level 2 covers all ~200 classes.
+
+**Deliverable:** validated Level 2 + Level 3 JSONL corpus, ready for Phase 2.
 
 ---
 
@@ -167,7 +163,7 @@ descriptions to classes via these at inference time.
 ### Week 4 — Build two-level corpus
 
 **Level 2 — Part templates** (~200 base examples)
-Source: `code/shared/<semantic>_templates.py`
+Source: `part_template/<semantic>.py`
 Each part class → two training examples:
 - (docstring → implementation): given a geometric description, write the class
 - (implementation → docstring): given the class, describe what it produces
@@ -195,7 +191,7 @@ class Tapered_Keyboard(ConceptTemplate):
 ```
 
 **Level 3 — Full instance assembly** (~3900 base examples)
-Source: `code/<Category>/concept_template.py` + `conceptualization.pkl`
+Source: slimmed `code/<Category>/concept_template.py` + `conceptualization.pkl`
 Each pkl entry → one training example:
 (category name + text description) → (part decomposition + imports + full instantiation)
 
@@ -207,23 +203,22 @@ Training format:
                  a thin screen panel hinged at the back, and two side ports
 ### Output:
 # Part decomposition:
-#   Base:      Regular_Base — flat cuboid keyboard/trackpad base
+#   Base:      Cuboidal_Base — flat cuboid keyboard/trackpad base
 #   Screen:    Hinged_Panel_Screen — thin panel tilted open from hinge
 #   Connector: Cuboidal_Connector — rectangular side ports
 
-import sys, os
-sys.path.insert(0, ...)
-from base_templates import Regular_Base
-from screen_templates import Hinged_Panel_Screen
-from connector_templates import Cuboidal_Connector
+from part_template.base import Cuboidal_Base
+from part_template.screen import Hinged_Panel_Screen
+from part_template.connector import Cuboidal_Connector
 
-base = Regular_Base(size=[0.32, 0.02, 0.22], position=[0.0, -0.01, 0.0], rotation=[0.0, 0.0, 0.0])
-screen = Hinged_Panel_Screen(size=[0.30, 0.01, 0.21], offset=[0.11, 0.0], screen_rotation=[110], ...)
-ports = Cuboidal_Connector(number_of_connector=[2], size=[0.015, 0.008, 0.012], ...)
+base = Cuboidal_Base(size=[0.32, 0.06, 0.9], position=[0.0, -0.14, 0.22], rotation=[0.0, 0.0, 0.0])
+screen = Hinged_Panel_Screen(size=[1.3, 0.76, 0.02], offset=[-0.03, -0.56], screen_rotation=[-17], ...)
+ports = Cuboidal_Connector(number_of_connector=[2], size=[0.02, 0.02, 0.04], ...)
 ```
 
 ~3900 Level 3 examples (39 categories × ~100 pkl instances each).
-The pkl is the primary training data source.
+The pkl is the primary training data source. See `demo/data/training_corpus/`
+for a validated example of the Level 2 and Level 3 format for Laptop.
 
 ### Week 5 — Synthetic augmentation
 
@@ -329,12 +324,12 @@ def generate_concept_template(category: str, description: str) -> str:
 
 | Week | Phase | Deliverable |
 |------|-------|-------------|
-| 1 | 1.1 | Geometric audit complete, all duplicates merged/split, pkl files patched |
-| 2 | 1.2 | All part classes in `code/shared/<semantic>_templates.py` |
-| 3 | 1.3 | Category manifests import-only, docstrings on all part classes |
-| 4 | 2.1 | Level 2 + Level 3 base corpus built |
+| 1 | 1.1 | `part_template/` fully populated — all ~200 classes, convention-correct, docstring-complete |
+| 2 | 1.2 | All 39 category manifests import-only, `visualize.py` passing, pkl files consistent |
+| 3 | 1.3 | Level 2 + Level 3 base corpus generated and validated for all 39 categories |
+| 4 | 2.1 | Level 2 + Level 3 base corpus finalized, synthetic augmentation started |
 | 5 | 2.2 | Synthetic augmentation (~2000 Level 2 examples) |
-| 6 | 2.3 | Final dataset, train/val/test split |
+| 6 | 2.3 | Final JSONL dataset, train/val/test split documented |
 | 7 | 3.1 | Stage A checkpoint (part-level) |
 | 8 | 3.2 | Stage B checkpoint (assembly-level) |
 | 9 | 3.3 | Stage C checkpoint (end-to-end) |
@@ -354,108 +349,19 @@ def generate_concept_template(category: str, description: str) -> str:
 
 ---
 
-## Coding Conventions for `code/part_template/`
+## Coding Conventions for `part_template/`
 
-These conventions apply to **all** files in `code/part_template/` and must be followed
-when writing new classes or migrating existing ones.
+All conventions are fully specified in `scripts/plan/coding_conventions.md`.
+The key principles:
 
-### Convention 1 — Unpack parameter arrays into named variables
+- Every class follows a fixed `__init__` skeleton (rotation conversion → record params → unpack locals → geometry → concatenate → global transform → mesh/pts → semantic label).
+- Rotation conversion is always positive (`x / 180 * np.pi`); sign flips applied explicitly after with a comment.
+- All array params unpacked into named variables before any geometry call.
+- Single-primitive classes use direct vertex/face assignment; multi-primitive classes use list/concatenate.
+- Loop bodies always use `tmp_mesh` locals, never `self.mesh`.
+- Empty-concat guard on any class with conditional or loop-gated geometry.
+- Bilateral symmetry and existence-flag dispatch use data-driven loops, not copy-pasted blocks.
+- Non-default `offset_first` or `rotation_order` flags have a one-line explanatory comment.
 
-**Always** unpack array parameters into named local variables at the top of `__init__`,
-before any geometry construction. Never use raw index access (`size[0]`, `offset[1]`)
-in geometry calls.
-
-```python
-# BAD — opaque, requires cross-referencing docstring
-self.mesh = Cylinder(size[1], size[0], size[0],
-                     position=[0, 0, size[1] / 2])
-
-# GOOD — self-documenting
-radius, height = size[0], size[1]
-self.mesh = Cylinder(height, radius, radius,
-                     position=[0, 0, height / 2])
-```
-
-For multi-element params, unpack all fields:
-```python
-# size [w, h, d]
-width, height, depth = size
-# offset [x, y, z]
-ox, oy, oz = offset
-# separation [sx, sy, sz]
-sx, sy, sz = legs_separation
-```
-
-**Rationale:** named variables make geometric intent self-evident without needing
-to look up the docstring. The LLM learns `height / 2` as a meaningful expression,
-not `size[1] / 2`. This is critical for training data quality.
-
-### Convention 2 — Structured docstring on every class
-
-Every class must have a docstring in this format:
-```python
-"""
-Semantic: <type>
-Geometry: <one-line description of the shape produced>
-Used by: <comma-separated list of source categories>
-Parameters:
-  param_name [field1, field2, ...]: description of each field
-  ...
-"""
-```
-
-### Convention 3 — No single-item list/concatenate boilerplate
-
-For classes with only one geometry primitive, assign vertices/faces directly:
-```python
-# BAD
-vertices_list = []
-faces_list = []
-total_num_vertices = 0
-self.mesh = Cylinder(...)
-vertices_list.append(self.mesh.vertices)
-faces_list.append(self.mesh.faces + total_num_vertices)
-self.vertices = np.concatenate(vertices_list)
-self.faces = np.concatenate(faces_list)
-
-# GOOD
-self.mesh = Cylinder(...)
-self.vertices = self.mesh.vertices
-self.faces = self.mesh.faces
-```
-
-For classes with multiple geometries, keep the list/concatenate pattern.
-
-### Convention 4 — Local variables in loops, not instance attributes
-
-Inside `for` loops, always use local `tmp_mesh` variables, never `self.mesh`:
-```python
-# BAD — only last iteration survives on instance
-for i in range(n):
-    self.mesh = Cuboid(...)
-    vertices_list.append(self.mesh.vertices)
-
-# GOOD
-for i in range(n):
-    tmp_mesh = Cuboid(...)
-    vertices_list.append(tmp_mesh.vertices)
-```
-
-### Convention 5 — Empty-concat guard on conditional geometry
-
-Any class where `vertices_list` may be empty (conditional or loop-driven geometry)
-must guard before `np.concatenate`:
-```python
-if not vertices_list:
-    raise ValueError(f"{self.__class__.__name__}: no geometry was instantiated")
-self.vertices = np.concatenate(vertices_list)
-```
-
-### Convention 6 — Comment non-default transform flags
-
-Any use of `offset_first=True` or non-default `rotation_order` must have a comment:
-```python
-# offset_first=True: translation applied before rotation (part sits on a rotated surface)
-self.vertices = apply_transformation(self.vertices, position, rotation, offset_first=True)
-```
+The `demo/part_template/` classes are the canonical reference implementation of all these conventions.
 
