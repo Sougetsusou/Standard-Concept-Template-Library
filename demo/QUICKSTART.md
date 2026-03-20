@@ -1,31 +1,42 @@
 # Quickstart
 
-## 1. Generate training corpus artifacts
+## 1. Generate minimal laptop corpus
 
 ```bash
-python -m demo.cli generate-corpus
+python demo/scripts/generate_laptop_corpus.py
 ```
 
-## 2. Run full pipeline for Laptop
+Optional: extract fitted Stage2 parameters from Laptop pkl (one-time)
 
 ```bash
-python -m demo.cli run-e2e --category Laptop
+python demo/scripts/extract_laptop_fitted_defaults.py --sample-index 0
 ```
 
-## 3. Run full pipeline for Mug
+Switch to another pkl sample and apply it to code defaults in one command
 
 ```bash
-python -m demo.cli run-e2e --category Mug
+python demo/scripts/extract_laptop_fitted_defaults.py --sample-index 5 --apply
 ```
 
-## 4. Verify both categories
+## 2. Run end-to-end laptop demo
 
 ```bash
-python -m demo.cli verify
+python demo/scripts/laptop_demo.py
 ```
 
-## 5. Run tests
+## 3. Check outputs
+
+- Corpus: `demo/data/training_corpus/`
+- Execution report: `demo/artifacts/laptop_demo_report.json`
+
+## 4. Export/visualize mesh
 
 ```bash
-python -m unittest discover demo/tests
+python demo/scripts/visualize_laptop.py
+# Optional viewer if Open3D is available
+python demo/scripts/visualize_laptop.py --show
 ```
+
+- Mesh export (default): `demo/artifacts/laptop_demo_mesh.obj`
+- Stage2 runtime uses code-defined defaults in `demo/scripts/laptop_demo.py`.
+- Current defaults are fitted once from a Laptop pkl sample and then kept in code.

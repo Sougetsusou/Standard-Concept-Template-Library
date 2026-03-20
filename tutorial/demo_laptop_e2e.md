@@ -7,7 +7,7 @@ This document walks through the full lifecycle of a category (using **Laptop** a
 ## 1. Phase 1: Codebase Restructuring (The "Before" & "After")
 
 ### The "Before" State
-Originally, part definitions were tightly coupled to the category. The file `code/Laptop/concept_template.py` contained hardcoded definitions for `Regular_Base`, `Regular_Screen`, `Cuboidal_Connector`, etc., making them difficult for an LLM to reuse or learn from generically.
+Originally, part definitions were tightly coupled to the category. The file `code/Laptop/concept_template.py` contained hardcoded definitions for `Regular_Base`, `Hinged_Panel_Screen`, `Cuboidal_Connector`, etc., making them difficult for an LLM to reuse or learn from generically.
 
 ### The "After" State: `part_template/` Extraction
 After Phase 1, the logic is broken out by **semantic parts**. We move them to `part_template/` and attach highly structured docstrings to help the LLM understand the geometry.
@@ -29,7 +29,7 @@ class Regular_Base(ConceptTemplate):
 
 **`part_template/screen.py`**
 ```python
-class Regular_Screen(ConceptTemplate):
+class Hinged_Panel_Screen(ConceptTemplate):
     """
     Semantic: Screen
     Geometry: flat cuboid tilted at screen_rotation angle, offset from hinge point
@@ -53,7 +53,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'part_template'))
 
 from base import Regular_Base
-from screen import Regular_Screen
+from screen import Hinged_Panel_Screen
 from connector import Cuboidal_Connector, Cylindrical_Connector
 ```
 
@@ -72,10 +72,10 @@ Goal: Teach the LLM to read a geometric description and identify if an existing 
 ### Semantic type: Screen
 ### Description: a flat rectangular screen panel hinged at the back edge of the base, tilted open at an angle.
 ### Existing classes in screen.py:
-#   Regular_Screen — flat cuboid tilted at screen_rotation, offset from hinge
-### Decision: use_existing: Regular_Screen
+#   Hinged_Panel_Screen — flat cuboid tilted at screen_rotation, offset from hinge
+### Decision: use_existing: Hinged_Panel_Screen
 ### Instantiation (Demo):
-Regular_Screen(
+Hinged_Panel_Screen(
     size=[0.32, 0.01, 0.22],
     offset=[0.12, 0.0],
     screen_rotation=[110],
@@ -111,18 +111,18 @@ Goal: Teach the LLM to parse a full object description, decompose it, grab the n
 ### Output:
 # Part decomposition:
 #   Base:      Regular_Base
-#   Screen:    Regular_Screen
+#   Screen:    Hinged_Panel_Screen
 #   Connector: Cuboidal_Connector
 
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'part_template'))
 
 from base import Regular_Base
-from screen import Regular_Screen
+from screen import Hinged_Panel_Screen
 from connector import Cuboidal_Connector
 
 base = Regular_Base(size=[0.32, 0.02, 0.22], position=[0.0, -0.01, 0.0], rotation=[0.0, 0.0, 0.0])
-screen = Regular_Screen(size=[0.30, 0.01, 0.21], offset=[0.11, 0.0], screen_rotation=[110], position=[0.0, 0.02, -0.01], rotation=[0.0, 0.0, 0.0])
+screen = Hinged_Panel_Screen(size=[0.30, 0.01, 0.21], offset=[0.11, 0.0], screen_rotation=[110], position=[0.0, 0.02, -0.01], rotation=[0.0, 0.0, 0.0])
 ports = Cuboidal_Connector(number_of_connector=[2], size=[0.015, 0.008, 0.012], separation=[0.01], offset=[-0.02, -0.005, 0.08], connector_rotation=[0])
 ```
 
@@ -136,13 +136,13 @@ Once the model is fine-tuned, here is how a live inference looks when the user p
 > "Create a bulky gaming laptop. It has a surprisingly thick, multi-level base for cooling, a heavy screen tilted back 100 degrees, and four cylindrical audio/power jacks stacked on the right side."
 
 **1. Stage 1 LLM (Decomposition & Part Fetching)**
-*   Analyzes components: `MultiLevel_Base`, `Regular_Screen`, `Cylindrical_Connector`.
+*   Analyzes components: `MultiLevel_Base`, `Hinged_Panel_Screen`, `Cylindrical_Connector`.
 *   Checks `part_template/base.py` -> Doesn't find `MultiLevel_Base`.
-*   **Result:** LLM autogenerates a new `MultiLevel_Base` class building upon generic primitives (Cuboid). LLM identifies `Regular_Screen` and `Cylindrical_Connector` exist and flags them for import.
+*   **Result:** LLM autogenerates a new `MultiLevel_Base` class building upon generic primitives (Cuboid). LLM identifies `Hinged_Panel_Screen` and `Cylindrical_Connector` exist and flags them for import.
 
 **2. Stage 2 LLM (Instance Assembly)**
 *   Pulls the newly drafted `MultiLevel_Base` class definition.
-*   Imports `Regular_Screen` and `Cylindrical_Connector` from `part_template/`.
+*   Imports `Hinged_Panel_Screen` and `Cylindrical_Connector` from `part_template/`.
 *   Generates instantiation code predicting numeric size relations (e.g., assigning a thicker `size` parameter to the base).
 
 **3. Execution** 

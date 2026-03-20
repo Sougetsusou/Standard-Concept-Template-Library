@@ -64,7 +64,7 @@ class Frustum_Screen(ConceptTemplate):
         self.semantic = 'Screen'
 
 
-class Standard_Screen(ConceptTemplate):
+class Layered_Panel_Screen(ConceptTemplate):
     """
     Semantic: Screen
     Geometry: flat Cuboid front panel + optional Cuboid back layer
@@ -110,6 +110,49 @@ class Standard_Screen(ConceptTemplate):
 
         self.vertices = apply_transformation(self.vertices, position, rotation,
                                              rotation_order="YXZ", offset_first=True)
+
+        self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
+        self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))
+
+        self.semantic = 'Screen'
+
+
+class Hinged_Panel_Screen(ConceptTemplate):
+    """
+    Semantic: Screen
+    Geometry: single cuboid screen panel hinged and tilted around X axis
+    Used by: Laptop
+    Parameters:
+      size [w, h, d]: width, thickness, depth of the panel
+      offset [y, z]: hinge offset from base reference
+      screen_rotation [rx]: tilt angle in degrees
+      position, rotation: global transform
+    """
+    def __init__(self, size, offset, screen_rotation,
+                 position=[0, 0, 0], rotation=[0, 0, 0]):
+
+        rotation = [x / 180 * np.pi for x in rotation]
+        screen_rotation = [x / 180 * np.pi for x in screen_rotation]
+        super().__init__(position, rotation)
+
+        self.size = size
+        self.offset = offset
+        self.screen_rotation = screen_rotation
+
+        width, height, depth = size
+        offset_y, offset_z = offset
+        rot_x = screen_rotation[0]
+
+        panel_position = [0, offset_y + height * np.cos(rot_x) / 2, offset_z]
+        panel_rotation = [rot_x, 0, 0]
+
+        self.mesh = Cuboid(height, width, depth,
+                           position=panel_position,
+                           rotation=panel_rotation)
+        self.vertices = self.mesh.vertices
+        self.faces = self.mesh.faces
+
+        self.vertices = apply_transformation(self.vertices, position, rotation)
 
         self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
         self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))

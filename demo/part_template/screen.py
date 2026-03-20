@@ -1,0 +1,110 @@
+import numpy as np
+import trimesh
+
+from demo.shared.base_template import ConceptTemplate
+from demo.shared.geometry_template import Cuboid
+from demo.shared.knowledge_utils import SAMPLENUM
+from demo.shared.utils import apply_transformation
+
+
+class Layered_Panel_Screen(ConceptTemplate):
+    """
+    Semantic: Screen
+    Geometry: flat Cuboid front panel + optional Cuboid back layer
+    Used by: Display
+    Parameters:
+      has_additional_layer [flag]: 1 to include back layer
+      size [w, h, d]: dimensions of the front panel cuboid
+      additional_layer_size [w, h, d]: dimensions of the back layer cuboid
+      additional_layer_offset [x, y]: XY offset of the back layer
+      position, rotation: global transform
+    """
+
+    def __init__(self, has_additional_layer, size, additional_layer_size, additional_layer_offset,
+                 position=[0, 0, 0], rotation=[0, 0, 0]):
+
+        rotation = [x / 180 * np.pi for x in rotation]
+        super().__init__(position, rotation)
+
+        self.has_additional_layer = has_additional_layer
+        self.size = size
+        self.additional_layer_size = additional_layer_size
+        self.additional_layer_offset = additional_layer_offset
+
+        vertices_list = []
+        faces_list = []
+        total_num_vertices = 0
+
+        self.front_mesh = Cuboid(size[1], size[0], size[2])
+        vertices_list.append(self.front_mesh.vertices)
+        faces_list.append(self.front_mesh.faces + total_num_vertices)
+        total_num_vertices += len(self.front_mesh.vertices)
+
+        if has_additional_layer[0]:
+            self.back_mesh = Cuboid(
+                additional_layer_size[1],
+                additional_layer_size[0],
+                additional_layer_size[2],
+                position=[
+                    additional_layer_offset[0],
+                    additional_layer_offset[1],
+                    -size[2] / 2 - additional_layer_size[2] / 2,
+                ],
+            )
+            vertices_list.append(self.back_mesh.vertices)
+            faces_list.append(self.back_mesh.faces + total_num_vertices)
+            total_num_vertices += len(self.back_mesh.vertices)
+
+        self.vertices = np.concatenate(vertices_list)
+        self.faces = np.concatenate(faces_list)
+
+        self.vertices = apply_transformation(
+            self.vertices,
+            position,
+            rotation,
+            rotation_order="YXZ",
+            offset_first=True,
+        )
+
+        self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
+        self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))
+
+        self.semantic = "Screen"
+
+
+class Hinged_Panel_Screen(ConceptTemplate):
+    """
+    Semantic: Screen
+    Geometry: single cuboid screen panel hinged and tilted around X axis
+    Used by: Laptop
+    Parameters:
+      size [w, h, d]: width, thickness, depth of the panel
+      offset [y, z]: hinge offset from base reference
+      screen_rotation [rx]: tilt angle in degrees
+      position, rotation: global transform
+    """
+
+    def __init__(self, size, offset, screen_rotation, position=[0, 0, 0], rotation=[0, 0, 0]):
+        rotation = [x / 180 * np.pi for x in rotation]
+        screen_rotation = [x / 180 * np.pi for x in screen_rotation]
+        super().__init__(position, rotation)
+
+        self.size = size
+        self.offset = offset
+        self.screen_rotation = screen_rotation
+
+        back_mesh_position = [
+            0,
+            offset[0] + size[1] * np.cos(screen_rotation[0]) / 2,
+            offset[1],
+        ]
+        back_mesh_rotation = [screen_rotation[0], 0, 0]
+
+        mesh = Cuboid(size[1], size[0], size[2], position=back_mesh_position, rotation=back_mesh_rotation)
+        self.vertices = mesh.vertices
+        self.faces = mesh.faces
+        self.vertices = apply_transformation(self.vertices, position, rotation)
+
+        self.overall_obj_mesh = trimesh.Trimesh(self.vertices, self.faces)
+        self.overall_obj_pts = np.array(self.overall_obj_mesh.sample(SAMPLENUM))
+        self.semantic = "Screen"

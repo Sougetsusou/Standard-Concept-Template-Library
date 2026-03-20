@@ -110,7 +110,7 @@ part_template/
   button.py       # Controller_With_Button, Regular_Controller, ...
   tray.py         # Flat_Tray, Drawer_Like_Tray, ...
   connector.py    # Cuboidal_Connector, Cylindrical_Connector, ...
-  screen.py       # Regular_Screen, ...
+  screen.py       # Hinged_Panel_Screen, Layered_Panel_Screen, ...
   base.py         # Cuboidal_Base, Cylindrical_Base, Round_Base, ...
   wheel.py        # Standard_Wheel, ...
   window.py       # Symmetrical_Window, Asymmetrical_Window, ...
@@ -208,17 +208,17 @@ Training format:
 ### Output:
 # Part decomposition:
 #   Base:      Regular_Base — flat cuboid keyboard/trackpad base
-#   Screen:    Regular_Screen — thin panel tilted open from hinge
+#   Screen:    Hinged_Panel_Screen — thin panel tilted open from hinge
 #   Connector: Cuboidal_Connector — rectangular side ports
 
 import sys, os
 sys.path.insert(0, ...)
 from base_templates import Regular_Base
-from screen_templates import Regular_Screen
+from screen_templates import Hinged_Panel_Screen
 from connector_templates import Cuboidal_Connector
 
 base = Regular_Base(size=[0.32, 0.02, 0.22], position=[0.0, -0.01, 0.0], rotation=[0.0, 0.0, 0.0])
-screen = Regular_Screen(size=[0.30, 0.01, 0.21], offset=[0.11, 0.0], screen_rotation=[110], ...)
+screen = Hinged_Panel_Screen(size=[0.30, 0.01, 0.21], offset=[0.11, 0.0], screen_rotation=[110], ...)
 ports = Cuboidal_Connector(number_of_connector=[2], size=[0.015, 0.008, 0.012], ...)
 ```
 

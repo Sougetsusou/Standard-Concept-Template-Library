@@ -1,0 +1,5 @@
+{"task": "write_part_class", "semantic": "Base", "class_name": "Cuboidal_Base", "source": "part_template/base.py"}
+{"task": "write_part_class", "semantic": "Connector", "class_name": "Cuboidal_Connector", "source": "part_template/connector.py"}
+{"task": "write_part_class", "semantic": "Connector", "class_name": "Cylindrical_Connector", "source": "part_template/connector.py"}
+{"task": "write_part_class", "semantic": "Screen", "class_name": "Layered_Panel_Screen", "source": "part_template/screen.py"}
+{"task": "write_part_class", "semantic": "Screen", "class_name": "Hinged_Panel_Screen", "source": "part_template/screen.py"}
